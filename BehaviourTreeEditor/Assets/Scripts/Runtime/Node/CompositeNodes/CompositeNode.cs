@@ -4,6 +4,12 @@ namespace Gbt
 {
     public abstract class CompositeNode : Node
     {
-        protected List<Node> _children = new List<Node>();
+       protected List<Node> _children = new List<Node>();
+
+       public List<Node> Children
+       {
+           get => _children;
+           set => _children = value;
+       }
     }
 }

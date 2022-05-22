@@ -11,6 +11,8 @@ namespace Gbt
             Success
         }
 
+        protected bool _hasValidConditions = true;
+        
         private State _state = State.Running;
         private bool _started = false;
 
@@ -23,6 +25,15 @@ namespace Gbt
             {
                 OnStart();
                 _started = true;
+            }
+
+            if (!_hasValidConditions)
+            {
+                _state = State.Failure;
+                OnStop();
+                _started = false;
+                _hasValidConditions = true;
+                return _state;
             }
 
             _state = OnUpdate();

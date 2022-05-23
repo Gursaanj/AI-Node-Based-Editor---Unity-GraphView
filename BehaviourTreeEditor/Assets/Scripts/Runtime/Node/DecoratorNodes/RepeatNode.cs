@@ -13,6 +13,8 @@ namespace Gbt
         private bool _commitInfiniteRepetitions = false;
         private int _currentCycle;
         
+        public override string InspectorName { get; protected set; } = "Repeat Node";
+        
         protected override void OnStart()
         {
             if (numberOfRepetitions < -1)

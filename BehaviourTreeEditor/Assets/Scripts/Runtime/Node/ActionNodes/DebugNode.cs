@@ -10,6 +10,8 @@ namespace Gbt
         public string message;
         public LogType type= LogType.Log;
         
+        public override string InspectorName { get; protected set; } = "Debug Node";
+        
         protected override void OnStart()
         {
             LogMessage("OnStart");

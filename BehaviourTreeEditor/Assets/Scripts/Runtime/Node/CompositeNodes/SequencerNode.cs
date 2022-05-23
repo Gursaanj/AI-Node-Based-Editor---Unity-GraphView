@@ -10,6 +10,8 @@ namespace Gbt
     {
         private int _currentChildIndex;
         
+        public override string InspectorName { get; protected set; } = "Sequencer Node";
+
         protected override void OnStart()
         {
             _currentChildIndex = 0;

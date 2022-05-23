@@ -5,8 +5,6 @@ namespace Gbt
 {
     public class BehaviourTreeRunner : MonoBehaviour
     {
-        [SerializeField] private BehaviourTree _tree;
-
         private void Start()
         {
             // DebugNode logNode1 = ScriptableObject.CreateInstance<DebugNode>();
@@ -36,7 +34,7 @@ namespace Gbt
 
         private void Update()
         {
-            _tree.Update();
+            // _tree.Update();
         }
     }
 }

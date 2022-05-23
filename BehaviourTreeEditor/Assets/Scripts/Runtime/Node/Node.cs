@@ -11,13 +11,19 @@ namespace Gbt
             Success
         }
 
+        public string guid;
+
         protected bool _hasValidConditions = true;
         
         private State _state = State.Running;
         private bool _started = false;
 
+        public abstract string InspectorName { get; protected set; }
+        
         public State NodeState => _state;
         public bool Started => _started;
+
+        public Vector2 Position { get; set; }
 
         public State Update()
         {

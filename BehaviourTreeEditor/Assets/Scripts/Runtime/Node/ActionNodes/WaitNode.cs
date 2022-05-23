@@ -12,6 +12,8 @@ namespace Gbt
         
         private float _startTime;
         
+        public override string InspectorName { get; protected set; } = "Wait Node";
+        
         protected override void OnStart()
         {
             if (duration < 0.0f)

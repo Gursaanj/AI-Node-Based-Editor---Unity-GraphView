@@ -15,6 +15,7 @@ namespace Gbt
             
         }
 
+        public Action<NodeView> OnNodeSelected;
         private BehaviourTree _behaviourTree;
         
         public BehaviourTreeView()
@@ -37,6 +38,15 @@ namespace Gbt
             graphViewChanged -= OnGraphViewChanged;
             DeleteElements(graphElements);
             graphViewChanged += OnGraphViewChanged;
+
+            if (tree.rootNode == null)
+            {
+                tree.rootNode = tree.CreateNode(typeof(RootNode)) as RootNode;
+                EditorUtility.SetDirty(tree);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
+            
 
             //Create Node View
             foreach (Node node in tree.nodes)
@@ -135,12 +145,13 @@ namespace Gbt
         private void CreateNodeView(Node node)
         {
             NodeView nodeView = new NodeView(node);
+            nodeView.OnNodeSelected = OnNodeSelected;
             AddElement(nodeView);
         }
 
         private NodeView FindNodeView(Node node)
         {
-            return GetNodeByGuid(node.guid) as NodeView;
+            return GetNodeByGuid(node.Guid) as NodeView;
         }
     }
 }

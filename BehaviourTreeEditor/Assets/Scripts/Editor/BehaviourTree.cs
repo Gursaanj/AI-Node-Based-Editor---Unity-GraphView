@@ -26,7 +26,7 @@ namespace Gbt
         {
             Node node = (Node) ScriptableObject.CreateInstance(type);
             node.name = node.InspectorName;
-            node.guid = GUID.Generate().ToString();
+            node.Guid = GUID.Generate().ToString();
             nodes.Add(node);
 
             AssetDatabase.AddObjectToAsset(node, this);
@@ -45,6 +45,13 @@ namespace Gbt
 
         public void AddChild(Node parent, Node child)
         {
+            RootNode root = parent as RootNode;
+
+            if (root != null)
+            {
+                root.Child = child;
+            }
+
             DecoratorNode decoratorNode = parent as DecoratorNode;
 
             if (decoratorNode != null)
@@ -62,6 +69,13 @@ namespace Gbt
 
         public void RemoveChild(Node parent, Node child)
         {
+            RootNode root = parent as RootNode;
+
+            if (root != null)
+            {
+                root.Child = null;
+            }
+            
             DecoratorNode decoratorNode = parent as DecoratorNode;
 
             if (decoratorNode != null)
@@ -80,6 +94,13 @@ namespace Gbt
         public List<Node> GetChildren(Node parent)
         {
             List<Node> children = new List<Node>();
+            
+            RootNode root = parent as RootNode;
+
+            if (root != null && root.Child != null)
+            {
+                children.Add(root.Child);
+            }
             
             DecoratorNode decoratorNode = parent as DecoratorNode;
 

@@ -33,6 +33,7 @@ namespace Gbt
 
             _treeView = root.Q<BehaviourTreeView>();
             _inspectorView = root.Q<InspectorView>();
+            _treeView.OnNodeSelected = OnNodeSelectionChanged;
             
             OnSelectionChange();
         }
@@ -41,10 +42,16 @@ namespace Gbt
         {
             BehaviourTree tree = Selection.activeObject as BehaviourTree;
 
-            if (tree != null)
+            //Ensure that the asset is ready to be inspected before populating editor
+            if (tree != null && AssetDatabase.CanOpenAssetInEditor(tree.GetInstanceID()))
             {
                 _treeView.PopulateView(tree);
             }
+        }
+
+        private void OnNodeSelectionChanged(NodeView node)
+        {
+            _inspectorView.UpdateSelection(node);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ namespace Gbt
 {
     public class NodeView : UnityEditor.Experimental.GraphView.Node
     {
+        public Action<NodeView> OnNodeSelected;
         public Node node;
 
         private Port _inputPort;
@@ -17,7 +19,7 @@ namespace Gbt
         {
             this.node = node;
             title = node.name;
-            viewDataKey = node.guid;
+            viewDataKey = node.Guid;
 
             style.left = node.Position.x;
             style.top = node.Position.y;
@@ -45,6 +47,8 @@ namespace Gbt
                 case DecoratorNode _:
                     _inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));
                     break;
+                case RootNode _:
+                    break;
             }
 
             if (_inputPort != null)
@@ -66,12 +70,25 @@ namespace Gbt
                 case DecoratorNode _:
                     _outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(bool));
                     break;
+                case RootNode _:
+                    _outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(bool));
+                    break;
             }
 
             if (_outputPort != null)
             {
                 _outputPort.portName = string.Empty;
                 outputContainer.Add(_outputPort);
+            }
+        }
+
+        public override void OnSelected()
+        {
+            base.OnSelected();
+
+            if (OnNodeSelected != null)
+            {
+                OnNodeSelected.Invoke(this);
             }
         }
     }

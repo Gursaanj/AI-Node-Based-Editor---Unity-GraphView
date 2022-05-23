@@ -12,5 +12,13 @@ namespace Gbt
            get => _children;
            set => _children = value;
        }
+
+       public override Node Clone()
+       {
+           CompositeNode node = Instantiate(this);
+           node.Children = _children.ConvertAll(child => child.Clone());
+           return node;
+       }
+       
     }
 }

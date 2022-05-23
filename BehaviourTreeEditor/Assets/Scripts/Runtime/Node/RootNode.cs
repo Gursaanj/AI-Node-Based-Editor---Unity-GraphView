@@ -13,6 +13,14 @@ namespace Gbt
         }
 
         public override string InspectorName { get; protected set; } = "Root Node";
+
+        public override Node Clone()
+        {
+            RootNode node = Instantiate(this);
+            node.Child = _child.Clone();
+            return node;
+        }
+
         protected override void OnStart()
         {
         }

@@ -35,25 +35,25 @@ namespace Gbt
 
         protected override State OnUpdate()
         {
-            if (ChildNode.NodeState == State.Failure)
+            if (Child.NodeState == State.Failure)
             {
                 return State.Failure;
             }
 
             if (_commitInfiniteRepetitions)
             {
-                ChildNode.Update();
+                Child.Update();
                 return State.Running;
             }
 
-            if (ChildNode.NodeState == State.Success)
+            if (Child.NodeState == State.Success)
             {
                 _currentCycle++;
             }
 
             if (_currentCycle < numberOfRepetitions)
             {
-                ChildNode.Update();
+                Child.Update();
                 return State.Running;
             }
 

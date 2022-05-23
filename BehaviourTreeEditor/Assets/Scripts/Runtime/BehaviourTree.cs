@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace Gbt
@@ -28,19 +30,25 @@ namespace Gbt
             node.name = node.InspectorName;
             node.Guid = GUID.Generate().ToString();
             nodes.Add(node);
-
+            
+#if UNITY_EDITOR
             AssetDatabase.AddObjectToAsset(node, this);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+#endif            
+            
             return node;
         }
 
         public void DeleteNode(Node node)
         {
             nodes.Remove(node);
+            
+#if UNITY_EDITOR
             AssetDatabase.RemoveObjectFromAsset(node);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+#endif
         }
 
         public void AddChild(Node parent, Node child)
@@ -56,7 +64,7 @@ namespace Gbt
 
             if (decoratorNode != null)
             {
-                decoratorNode.ChildNode = child;
+                decoratorNode.Child = child;
             }
             
             CompositeNode compositeNode = parent as CompositeNode;
@@ -80,7 +88,7 @@ namespace Gbt
 
             if (decoratorNode != null)
             {
-                decoratorNode.ChildNode = null;
+                decoratorNode.Child = null;
             }
             
             CompositeNode compositeNode = parent as CompositeNode;
@@ -104,9 +112,9 @@ namespace Gbt
             
             DecoratorNode decoratorNode = parent as DecoratorNode;
 
-            if (decoratorNode != null && decoratorNode.ChildNode != null)
+            if (decoratorNode != null && decoratorNode.Child != null)
             {
-                children.Add(decoratorNode.ChildNode);
+                children.Add(decoratorNode.Child);
             }
             
             CompositeNode compositeNode = parent as CompositeNode;
@@ -117,6 +125,13 @@ namespace Gbt
             }
 
             return children;
+        }
+
+        public BehaviourTree Clone()
+        {
+            BehaviourTree tree = Instantiate(this);
+            tree.rootNode = tree.rootNode.Clone();
+            return tree;
         }
     }
 }

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Gbt
 {
     public abstract class CompositeNode : Node
     {
-       protected List<Node> _children = new List<Node>();
+       [SerializeField] protected List<Node> _children = new List<Node>();
 
        public List<Node> Children
        {

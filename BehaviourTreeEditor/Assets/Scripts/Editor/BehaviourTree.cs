@@ -42,5 +42,60 @@ namespace Gbt
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
+
+        public void AddChild(Node parent, Node child)
+        {
+            DecoratorNode decoratorNode = parent as DecoratorNode;
+
+            if (decoratorNode != null)
+            {
+                decoratorNode.ChildNode = child;
+            }
+            
+            CompositeNode compositeNode = parent as CompositeNode;
+
+            if (compositeNode != null)
+            {
+                compositeNode.Children.Add(child);
+            }
+        }
+
+        public void RemoveChild(Node parent, Node child)
+        {
+            DecoratorNode decoratorNode = parent as DecoratorNode;
+
+            if (decoratorNode != null)
+            {
+                decoratorNode.ChildNode = null;
+            }
+            
+            CompositeNode compositeNode = parent as CompositeNode;
+
+            if (compositeNode != null && compositeNode.Children != null && compositeNode.Children.Count != 0)
+            {
+                compositeNode.Children.Remove(child);
+            }
+        }
+
+        public List<Node> GetChildren(Node parent)
+        {
+            List<Node> children = new List<Node>();
+            
+            DecoratorNode decoratorNode = parent as DecoratorNode;
+
+            if (decoratorNode != null && decoratorNode.ChildNode != null)
+            {
+                children.Add(decoratorNode.ChildNode);
+            }
+            
+            CompositeNode compositeNode = parent as CompositeNode;
+
+            if (compositeNode != null && compositeNode.Children != null)
+            {
+                return compositeNode.Children;
+            }
+
+            return children;
+        }
     }
 }

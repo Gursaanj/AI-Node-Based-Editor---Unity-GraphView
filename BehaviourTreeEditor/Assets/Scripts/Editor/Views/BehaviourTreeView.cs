@@ -1,7 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Gbt
@@ -37,32 +38,35 @@ namespace Gbt
             DeleteElements(graphElements);
             graphViewChanged += OnGraphViewChanged;
 
+            //Create Node View
             foreach (Node node in tree.nodes)
             {
                 CreateNodeView(node);
             }
-        }
-
-        private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
-        {
-            if (graphViewChange.elementsToRemove == null)
-            {
-                return graphViewChange;
-            }
             
-            foreach (GraphElement element in graphViewChange.elementsToRemove)
+            //Create edges
+            foreach (Node node in tree.nodes)
             {
-                NodeView nodeView = element as NodeView;
-
-                if (nodeView != null)
+                List<Node> children = tree.GetChildren(node);
+                foreach (Node child in children)
                 {
-                    _behaviourTree.DeleteNode(nodeView.node);
+                    NodeView parentView = FindNodeView(node);
+                    NodeView childView = FindNodeView(child);
+
+                    Edge edge = parentView.OutputPort.ConnectTo(childView.InputPort);
+                    AddElement(edge);
                 }
             }
-
-            return graphViewChange;
+            
         }
 
+        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+        {
+            return ports.ToList().Where(endPort =>
+                endPort.direction != startPort.direction &&
+                endPort.node != startPort.node).ToList();
+        }
+        
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
             TypeCache.TypeCollection actionTypes = TypeCache.GetTypesDerivedFrom<ActionNode>();
@@ -88,6 +92,39 @@ namespace Gbt
                 evt.menu.AppendAction($"[{decoratorType.BaseType.Name}] {decoratorType.Name}", action => CreateNode(decoratorType));
             }
         }
+        
+        private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
+        {
+            if (graphViewChange.elementsToRemove != null)
+            {
+                foreach (GraphElement element in graphViewChange.elementsToRemove)
+                {
+                    if (element is NodeView nodeView)
+                    {
+                        _behaviourTree.DeleteNode(nodeView.node);
+                    }
+
+                    if (element is Edge edge)
+                    {
+                        NodeView parentView = edge.output.node as NodeView;
+                        NodeView childView = edge.input.node as NodeView;
+                        _behaviourTree.RemoveChild(parentView.node, childView.node);
+                    }
+                }
+            }
+
+            if (graphViewChange.edgesToCreate != null)
+            {
+                foreach (Edge edge in graphViewChange.edgesToCreate)
+                {
+                    NodeView parentView = edge.output.node as NodeView;
+                    NodeView childView = edge.input.node as NodeView;
+                    _behaviourTree.AddChild(parentView.node, childView.node);
+                }
+            }
+
+            return graphViewChange;
+        }
 
         private void CreateNode(System.Type type)
         {
@@ -99,6 +136,11 @@ namespace Gbt
         {
             NodeView nodeView = new NodeView(node);
             AddElement(nodeView);
+        }
+
+        private NodeView FindNodeView(Node node)
+        {
+            return GetNodeByGuid(node.guid) as NodeView;
         }
     }
 }

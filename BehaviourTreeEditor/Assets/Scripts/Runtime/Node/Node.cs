@@ -24,7 +24,14 @@ namespace Gbt
 
         public string Guid
         {
-            get => _guid;
+            get 
+        {
+            if (string.IsNullOrEmpty(_guid))
+            {
+                Debug.LogError("invalid GUID, references in the GraphView might be lost");
+            }
+            return _guid;
+        }
             set => _guid = value;
         }
         public Vector2 Position { get; set; }

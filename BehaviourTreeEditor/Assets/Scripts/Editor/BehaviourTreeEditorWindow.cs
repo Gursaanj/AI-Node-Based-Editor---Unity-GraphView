@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -15,6 +16,19 @@ namespace Gbt
         {
             BehaviourTreeEditorWindow wnd = GetWindow<BehaviourTreeEditorWindow>();
             wnd.titleContent = new GUIContent("BehaviourTreeEditorWindow");
+            wnd.Show();
+        }
+        
+        [OnOpenAsset]
+        public static bool OnOpenAsset(int instanceId, int line)
+        {
+            if (!(Selection.activeObject is BehaviourTree))
+            {
+                return false;
+            }
+            
+            OpenWindow();
+            return true;
         }
 
         public void CreateGUI()

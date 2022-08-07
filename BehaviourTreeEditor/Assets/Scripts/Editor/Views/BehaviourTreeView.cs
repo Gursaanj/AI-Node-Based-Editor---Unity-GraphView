@@ -58,9 +58,10 @@ namespace Gbt
             foreach (Node node in tree.nodes)
             {
                 List<Node> children = tree.GetChildren(node);
+                NodeView parentView = FindNodeView(node);
+                
                 foreach (Node child in children)
                 {
-                    NodeView parentView = FindNodeView(node);
                     NodeView childView = FindNodeView(child);
 
                     Edge edge = parentView.OutputPort.ConnectTo(childView.InputPort);
@@ -68,6 +69,7 @@ namespace Gbt
                 }
             }
             
+            UpdateViewTransform(tree.rootNode.Position , viewport.transform.scale);
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)

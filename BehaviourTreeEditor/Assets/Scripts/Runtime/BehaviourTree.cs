@@ -28,7 +28,7 @@ namespace Gbt
         {
             Node node = (Node) ScriptableObject.CreateInstance(type);
             node.name = node.InspectorName;
-            node.Guid = GUID.Generate().ToString();
+            node.Guid = GUID.Generate().ToString(); //Todo: This is part of UnityEditor, circumvent somehow, maybe as parameter
             nodes.Add(node);
             
 #if UNITY_EDITOR

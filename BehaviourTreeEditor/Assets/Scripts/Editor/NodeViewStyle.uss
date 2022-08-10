@@ -1,0 +1,103 @@
+#node-border {
+    background-color: rgb(56, 56, 56);
+    border-left-color: rgb(37, 37, 37);
+    border-right-color: rgb(37, 37, 37);
+    border-top-color: rgb(37, 37, 37);
+    border-bottom-color: rgb(37, 37, 37);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+#input {
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#output {
+    align-items: center;
+}
+
+#selection-border {
+    border-left-color: rgb(8, 128, 255);
+    border-right-color: rgb(8, 128, 255);
+    border-top-color: rgb(8, 128, 255);
+    border-bottom-color: rgb(8, 128, 255);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+:hover > #selection-border {
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+}
+
+:selected > #selection-border {
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+}
+
+:hover:selected > #selection-border {
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+}
+
+.node {
+    min-width: 150px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#title {
+    -unity-font-style: bold;
+    font-size: 14px;
+}
+
+#description {
+    font-size: 10px;
+}
+
+#divider {
+    min-height: 1px;
+    background-color: rgba(75, 71, 71, 255);
+}
+
+.action #input {
+    background-color: rgba(247, 44, 37, 255);
+}
+
+.composite #input {
+    background-color: rgba(247, 179, 43, 255);
+}
+
+.decorator #input {
+    background-color: rgba(252, 246, 177, 255);
+}
+
+.root #input {
+    background-color: rgba(45, 30, 47, 255);
+}

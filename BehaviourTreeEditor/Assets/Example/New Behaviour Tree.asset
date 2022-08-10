@@ -1,20 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8864301635420213944
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55ac1de7d8a7f69488ffa2d1c548cf49, type: 3}
-  m_Name: Repeat Node
-  m_EditorClassIdentifier: 
-  _child: {fileID: -2819674898848063810}
-  numberOfRepetitions: 5
---- !u!114 &-2819674898848063810
+--- !u!114 &-1951153396807792544
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -26,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d2bc4515772c64c8974f0a5f4016cc, type: 3}
   m_Name: Debug Node
   m_EditorClassIdentifier: 
-  message: Hope This Works
+  message: Debug Message
   type: 3
 --- !u!114 &11400000
 MonoBehaviour:
@@ -40,13 +26,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c422b78f85f46584cbe0d058efc13718, type: 3}
   m_Name: New Behaviour Tree
   m_EditorClassIdentifier: 
-  rootNode: {fileID: 3868786804967778243}
+  rootNode: {fileID: 7094731488246259931}
   treeState: 0
   nodes:
-  - {fileID: 3868786804967778243}
-  - {fileID: -8864301635420213944}
-  - {fileID: -2819674898848063810}
---- !u!114 &3868786804967778243
+  - {fileID: 7094731488246259931}
+  - {fileID: 8751559385588663455}
+  - {fileID: 8862254968026000834}
+  - {fileID: 2536645875764273758}
+  - {fileID: -1951153396807792544}
+--- !u!114 &2536645875764273758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ebeb7c21167d8d4f83a145820670bb9, type: 3}
+  m_Name: Wait Node
+  m_EditorClassIdentifier: 
+  duration: 1
+--- !u!114 &7094731488246259931
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -58,4 +59,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cabe08d2e2ef82244927fc6096b2479d, type: 3}
   m_Name: Root Node
   m_EditorClassIdentifier: 
-  _child: {fileID: -8864301635420213944}
+  _child: {fileID: 8751559385588663455}
+--- !u!114 &8751559385588663455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91594645077396347bff885c3eeef9ab, type: 3}
+  m_Name: Sequencer Node
+  m_EditorClassIdentifier: 
+  _children:
+  - {fileID: 2536645875764273758}
+  - {fileID: 8862254968026000834}
+--- !u!114 &8862254968026000834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55ac1de7d8a7f69488ffa2d1c548cf49, type: 3}
+  m_Name: Repeat Node
+  m_EditorClassIdentifier: 
+  _child: {fileID: -1951153396807792544}
+  numberOfRepetitions: 5

@@ -1,6 +1,7 @@
 using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Gbt
 {
@@ -15,7 +16,7 @@ namespace Gbt
         public Port InputPort => _inputPort;
         public Port OutputPort => _outputPort;
 
-        public NodeView(Node node)
+        public NodeView(Node node) : base("Assets/Scripts/Editor/NodeView.uxml")
         {
             this.node = node;
             title = node.name;
@@ -26,6 +27,7 @@ namespace Gbt
             
             CreateInputPorts();
             CreateOutputPorts();
+            SetupClasses();
         }
 
         public override void SetPosition(Rect newPos)
@@ -39,13 +41,13 @@ namespace Gbt
             switch (node)
             {
                 case ActionNode _:
-                    _inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));
+                    _inputPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(bool));
                     break;
                 case CompositeNode _:
-                    _inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));
+                    _inputPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(bool));
                     break;
                 case DecoratorNode _:
-                    _inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));
+                    _inputPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(bool));
                     break;
                 case RootNode _:
                     break;
@@ -54,6 +56,7 @@ namespace Gbt
             if (_inputPort != null)
             {
                 _inputPort.portName = string.Empty;
+                _inputPort.style.flexDirection = FlexDirection.Column;
                 inputContainer.Add(_inputPort);
             }
         }
@@ -65,20 +68,41 @@ namespace Gbt
                 case ActionNode _:
                     break;
                 case CompositeNode _:
-                    _outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
+                    _outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Multi, typeof(bool));
                     break;
                 case DecoratorNode _:
-                    _outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(bool));
+                    _outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single, typeof(bool));
                     break;
                 case RootNode _:
-                    _outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(bool));
+                    _outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single, typeof(bool));
                     break;
             }
 
             if (_outputPort != null)
             {
                 _outputPort.portName = string.Empty;
+                _outputPort.style.flexDirection = FlexDirection.ColumnReverse;
                 outputContainer.Add(_outputPort);
+            }
+        }
+
+        private void SetupClasses()
+        {
+            //Tag USS document with node type, to differentiate in UI Builder
+            switch (node) 
+            {
+                case ActionNode _:
+                    AddToClassList("action");
+                    break;
+                case CompositeNode _:
+                    AddToClassList("composite");
+                    break;
+                case DecoratorNode _:
+                    AddToClassList("decorator");
+                    break;
+                case RootNode _:
+                    AddToClassList("root");
+                    break;
             }
         }
 

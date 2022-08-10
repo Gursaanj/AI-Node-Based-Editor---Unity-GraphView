@@ -19,7 +19,7 @@ namespace Gbt
             wnd.Show();
         }
         
-        [OnOpenAsset]
+        [OnOpenAsset(OnOpenAssetAttributeMode.Execute)]
         public static bool OnOpenAsset(int instanceId, int line)
         {
             if (!(Selection.activeObject is BehaviourTree))

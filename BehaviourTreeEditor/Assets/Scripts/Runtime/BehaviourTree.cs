@@ -23,89 +23,79 @@ namespace Gbt
 
             return treeState;
         }
-#if UNITY_EDITOR
+
         public Node CreateNode(System.Type type)
         {
             Node node = (Node) ScriptableObject.CreateInstance(type);
             node.name = node.InspectorName;
-            node.Guid = GUID.Generate().ToString();
-            
-            Undo.RecordObject(this, "Create Node");
+            node.Guid = GUID.Generate().ToString(); //Todo: This is part of UnityEditor, circumvent somehow, maybe as parameter
             nodes.Add(node);
             
+#if UNITY_EDITOR
             AssetDatabase.AddObjectToAsset(node, this);
-            Undo.RegisterCreatedObjectUndo(node, "Create Node");
             AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();          
+            AssetDatabase.Refresh();
+#endif            
             
             return node;
         }
 
         public void DeleteNode(Node node)
         {
-            Undo.RecordObject(this, "Delete Node");
             nodes.Remove(node);
             
-            //AssetDatabase.RemoveObjectFromAsset(node);
-            Undo.DestroyObjectImmediate(node);
+#if UNITY_EDITOR
+            AssetDatabase.RemoveObjectFromAsset(node);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+#endif
         }
 
         public void AddChild(Node parent, Node child)
         {
-            RootNode rootNode = parent as RootNode;
-            if (rootNode != null)
+            RootNode root = parent as RootNode;
+
+            if (root != null)
             {
-                Undo.RecordObject(rootNode, "Add Child");
-                rootNode.Child = child;
-                EditorUtility.SetDirty(rootNode);
+                root.Child = child;
             }
 
             DecoratorNode decoratorNode = parent as DecoratorNode;
+
             if (decoratorNode != null)
             {
-                Undo.RecordObject(decoratorNode, "Add Child");
                 decoratorNode.Child = child;
-                EditorUtility.SetDirty(decoratorNode);
             }
             
             CompositeNode compositeNode = parent as CompositeNode;
+
             if (compositeNode != null)
             {
-                Undo.RecordObject(compositeNode, "Add Child");
                 compositeNode.Children.Add(child);
-                EditorUtility.SetDirty(compositeNode);
             }
         }
 
         public void RemoveChild(Node parent, Node child)
         {
-            RootNode rootNode = parent as RootNode;
+            RootNode root = parent as RootNode;
 
-            if (rootNode != null)
+            if (root != null)
             {
-                Undo.RecordObject(rootNode, "Remove Child");
-                rootNode.Child = null;
-                EditorUtility.SetDirty(rootNode);
+                root.Child = null;
             }
             
             DecoratorNode decoratorNode = parent as DecoratorNode;
 
             if (decoratorNode != null)
             {
-                Undo.RecordObject(decoratorNode, "Remove Child");
                 decoratorNode.Child = null;
-                EditorUtility.SetDirty(decoratorNode);
             }
             
             CompositeNode compositeNode = parent as CompositeNode;
 
             if (compositeNode != null && compositeNode.Children != null && compositeNode.Children.Count != 0)
             {
-                Undo.RecordObject(compositeNode, "Remove Child");
                 compositeNode.Children.Remove(child);
-                EditorUtility.SetDirty(compositeNode);
             }
         }
 
@@ -143,6 +133,5 @@ namespace Gbt
             tree.rootNode = tree.rootNode.Clone();
             return tree;
         }
-#endif
     }
 }

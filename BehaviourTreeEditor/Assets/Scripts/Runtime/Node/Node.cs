@@ -10,7 +10,7 @@ namespace Gbt
             Failure,
             Success
         }
-        public Vector2 position;
+        
         protected bool _hasValidConditions = true;
         
         private State _state = State.Running;
@@ -34,6 +34,7 @@ namespace Gbt
         }
             set => _guid = value;
         }
+        public Vector2 Position { get; set; }
 
         public State Update()
         {

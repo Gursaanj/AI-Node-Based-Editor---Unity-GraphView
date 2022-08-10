@@ -25,10 +25,7 @@ namespace Gbt
             _editor = Editor.CreateEditor(nodeView.node);
             IMGUIContainer container = new IMGUIContainer(() =>
             {
-                if (_editor.target)
-                {
-                    _editor.OnInspectorGUI();
-                }
+                _editor.OnInspectorGUI();
             });
             Add(container);
         }

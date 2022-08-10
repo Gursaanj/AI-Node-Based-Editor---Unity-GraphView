@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -22,8 +23,8 @@ namespace Gbt
             title = node.name;
             viewDataKey = node.Guid;
 
-            style.left = node.Position.x;
-            style.top = node.Position.y;
+            style.left = node.position.x;
+            style.top = node.position.y;
             
             CreateInputPorts();
             CreateOutputPorts();
@@ -33,7 +34,9 @@ namespace Gbt
         public override void SetPosition(Rect newPos)
         {
             base.SetPosition(newPos);
-            node.Position = new Vector2(newPos.xMin, newPos.yMin);
+            Undo.RecordObject(node, "Node Positional Change" );
+            node.position = new Vector2(newPos.xMin, newPos.yMin);
+            EditorUtility.SetDirty(node); //helps keep persistent through certain events like assembly reloads
         }
 
         private void CreateInputPorts()

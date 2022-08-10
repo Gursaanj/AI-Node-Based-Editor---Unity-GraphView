@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Gbt
@@ -29,6 +30,8 @@ namespace Gbt
 
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Editor/BehaviourTreeEditorWindow.uss");
             styleSheets.Add(styleSheet);
+
+            Undo.undoRedoPerformed += OnUndoRedoPerformed;
         }
 
         public void PopulateView(BehaviourTree tree)
@@ -69,7 +72,7 @@ namespace Gbt
                 }
             }
             
-            UpdateViewTransform(tree.rootNode.Position , viewport.transform.scale);
+            UpdateViewTransform(tree.rootNode.position , viewport.transform.scale);
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -154,6 +157,14 @@ namespace Gbt
         private NodeView FindNodeView(Node node)
         {
             return GetNodeByGuid(node.Guid) as NodeView;
+        }
+
+        private void OnUndoRedoPerformed()
+        {
+            // Todo: why are we not saving viewport Position?
+            // need to manually set back if no elegant solution can be made
+            PopulateView(_behaviourTree);
+            AssetDatabase.SaveAssets();
         }
     }
 }

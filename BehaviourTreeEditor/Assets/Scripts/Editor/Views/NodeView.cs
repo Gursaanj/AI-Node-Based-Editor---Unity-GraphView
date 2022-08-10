@@ -20,10 +20,10 @@ namespace Gbt
         {
             this.node = node;
             title = node.name;
-            viewDataKey = node.Guid;
+            viewDataKey = node.guid;
 
-            style.left = node.Position.x;
-            style.top = node.Position.y;
+            style.left = node.position.x;
+            style.top = node.position.y;
             
             CreateInputPorts();
             CreateOutputPorts();
@@ -33,7 +33,7 @@ namespace Gbt
         public override void SetPosition(Rect newPos)
         {
             base.SetPosition(newPos);
-            node.Position = new Vector2(newPos.xMin, newPos.yMin);
+            node.position = new Vector2(newPos.xMin, newPos.yMin);
         }
 
         private void CreateInputPorts()

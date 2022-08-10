@@ -69,7 +69,7 @@ namespace Gbt
                 }
             }
             
-            UpdateViewTransform(tree.rootNode.Position , viewport.transform.scale);
+            UpdateViewTransform(tree.rootNode.position , viewport.transform.scale);
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -153,7 +153,7 @@ namespace Gbt
 
         private NodeView FindNodeView(Node node)
         {
-            return GetNodeByGuid(node.Guid) as NodeView;
+            return GetNodeByGuid(node.guid) as NodeView;
         }
     }
 }

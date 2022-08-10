@@ -23,20 +23,19 @@ namespace Gbt
 
             return treeState;
         }
-
+#if UNITY_EDITOR
         public Node CreateNode(System.Type type)
         {
             Node node = (Node) ScriptableObject.CreateInstance(type);
             node.name = node.InspectorName;
-            node.Guid = GUID.Generate().ToString(); //Todo: This is part of UnityEditor, circumvent somehow, maybe as parameter
+            node.guid = GUID.Generate().ToString();
             nodes.Add(node);
             
-#if UNITY_EDITOR
+
             AssetDatabase.AddObjectToAsset(node, this);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-#endif            
-            
+
             return node;
         }
 
@@ -133,5 +132,6 @@ namespace Gbt
             tree.rootNode = tree.rootNode.Clone();
             return tree;
         }
+#endif  
     }
 }

@@ -10,31 +10,19 @@ namespace Gbt
             Failure,
             Success
         }
+
+        public Vector2 position;
+        [HideInInspector] public string guid;
         
         protected bool _hasValidConditions = true;
         
         private State _state = State.Running;
         private bool _started = false;
-        private string _guid;
 
         public abstract string InspectorName { get; protected set; }
         
         public State NodeState => _state;
         public bool Started => _started;
-
-        public string Guid
-        {
-            get 
-        {
-            if (string.IsNullOrEmpty(_guid))
-            {
-                Debug.LogError("invalid GUID, references in the GraphView might be lost");
-            }
-            return _guid;
-        }
-            set => _guid = value;
-        }
-        public Vector2 Position { get; set; }
 
         public State Update()
         {

@@ -83,21 +83,22 @@
 
 #divider {
     min-height: 1px;
-    background-color: rgba(75, 71, 71, 255);
+    background-color: rgb(75, 71, 71);
 }
 
 .action #input {
-    background-color: rgba(247, 44, 37, 255);
+    background-color: rgb(247, 44, 37);
 }
 
 .composite #input {
-    background-color: rgba(247, 179, 43, 255);
+    background-color: rgb(247, 179, 43);
 }
 
 .decorator #input {
-    background-color: rgba(252, 246, 177, 255);
+    background-color: rgb(252, 246, 177);
 }
 
 .root #input {
-    background-color: rgba(45, 30, 47, 255);
+    background-color: rgb(45, 30, 47);
+    min-height: 20px;
 }

@@ -29,6 +29,8 @@ namespace Gbt
 
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Editor/BehaviourTreeEditorWindow.uss");
             styleSheets.Add(styleSheet);
+
+            Undo.undoRedoPerformed += OnUndoRedoPerformed;
         }
 
         public void PopulateView(BehaviourTree tree)
@@ -154,6 +156,13 @@ namespace Gbt
         private NodeView FindNodeView(Node node)
         {
             return GetNodeByGuid(node.guid) as NodeView;
+        }
+
+        private void OnUndoRedoPerformed()
+        {
+            PopulateView(_behaviourTree);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
     }
 }

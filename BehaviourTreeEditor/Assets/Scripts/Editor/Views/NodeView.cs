@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -33,7 +34,9 @@ namespace Gbt
         public override void SetPosition(Rect newPos)
         {
             base.SetPosition(newPos);
+            Undo.RecordObject(node, "Set Node Position");
             node.position = new Vector2(newPos.xMin, newPos.yMin);
+            EditorUtility.SetDirty(node); //Manually forces recording to persist through events like assembly reloads
         }
 
         private void CreateInputPorts()

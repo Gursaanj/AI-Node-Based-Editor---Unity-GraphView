@@ -29,10 +29,12 @@ namespace Gbt
             Node node = (Node) ScriptableObject.CreateInstance(type);
             node.name = node.InspectorName;
             node.guid = GUID.Generate().ToString();
+            
+            Undo.RecordObject(this, "Create Node");
             nodes.Add(node);
             
-
             AssetDatabase.AddObjectToAsset(node, this);
+            Undo.RegisterCreatedObjectUndo(node, "Create Node");
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
@@ -41,60 +43,65 @@ namespace Gbt
 
         public void DeleteNode(Node node)
         {
+            Undo.RecordObject(this, "Delete Node");
             nodes.Remove(node);
             
-#if UNITY_EDITOR
-            AssetDatabase.RemoveObjectFromAsset(node);
+            Undo.DestroyObjectImmediate(node);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-#endif
         }
 
         public void AddChild(Node parent, Node child)
         {
             RootNode root = parent as RootNode;
-
             if (root != null)
             {
+                Undo.RecordObject(root, "Add Child");
                 root.Child = child;
+                EditorUtility.SetDirty(root);
             }
 
             DecoratorNode decoratorNode = parent as DecoratorNode;
-
             if (decoratorNode != null)
             {
+                Undo.RecordObject(decoratorNode, "Add Child");
                 decoratorNode.Child = child;
+                EditorUtility.SetDirty(decoratorNode);
             }
             
             CompositeNode compositeNode = parent as CompositeNode;
-
             if (compositeNode != null)
             {
+                Undo.RecordObject(compositeNode, "Add Child");
                 compositeNode.Children.Add(child);
+                EditorUtility.SetDirty(compositeNode);
             }
         }
 
         public void RemoveChild(Node parent, Node child)
         {
             RootNode root = parent as RootNode;
-
             if (root != null)
             {
+                Undo.RecordObject(root, "Remove Child");
                 root.Child = null;
+                EditorUtility.SetDirty(root);
             }
             
             DecoratorNode decoratorNode = parent as DecoratorNode;
-
             if (decoratorNode != null)
             {
+                Undo.RecordObject(decoratorNode, "Remove Child");
                 decoratorNode.Child = null;
+                EditorUtility.SetDirty(decoratorNode);
             }
             
             CompositeNode compositeNode = parent as CompositeNode;
-
             if (compositeNode != null && compositeNode.Children != null && compositeNode.Children.Count != 0)
             {
+                Undo.RecordObject(compositeNode, "Remove Child");
                 compositeNode.Children.Remove(child);
+                EditorUtility.SetDirty(compositeNode);
             }
         }
 

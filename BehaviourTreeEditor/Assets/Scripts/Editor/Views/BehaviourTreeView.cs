@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Gbt
@@ -15,13 +16,16 @@ namespace Gbt
             
         }
 
+        // based on GraphView.k_FrameBorder
+        private const int FRAME_BORDER_WIDTH = 30;
+
         public Action<NodeView> OnNodeSelected;
         private BehaviourTree _behaviourTree;
         
         public BehaviourTreeView()
         {
             Insert(0, new GridBackground());
-            
+
             this.AddManipulator(new ContentZoomer());
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
@@ -71,7 +75,7 @@ namespace Gbt
                 }
             }
             
-            UpdateViewTransform(tree.rootNode.position , viewport.transform.scale);
+            EditorApplication.delayCall += () => ResetViewToFitAllContent(true);
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -105,8 +109,19 @@ namespace Gbt
             {
                 evt.menu.AppendAction($"[{decoratorType.BaseType.Name}] {decoratorType.Name}", action => CreateNode(decoratorType));
             }
+            
+            evt.menu.AppendAction("Reset View", action => ResetViewToFitAllContent(false));
         }
-        
+
+        //From https://forum.unity.com/threads/graph-view-transform-that-fits-all-elements.1276886/
+        private void ResetViewToFitAllContent(bool maintainCurrentViewScale)
+        {
+            Rect rectToFit = CalculateRectToFitAll(contentViewContainer);
+            CalculateFrameTransform(rectToFit, layout, FRAME_BORDER_WIDTH, out Vector3 frameTranslation, out Vector3 frameScaling);
+            Matrix4x4.TRS(frameTranslation, Quaternion.identity, frameScaling);
+            UpdateViewTransform(frameTranslation, maintainCurrentViewScale ? viewTransform.scale : frameScaling);
+        }
+
         private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
             if (graphViewChange.elementsToRemove != null)

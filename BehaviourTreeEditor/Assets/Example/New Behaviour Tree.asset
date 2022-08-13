@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d2bc4515772c64c8974f0a5f4016cc, type: 3}
   m_Name: Debug Node
   m_EditorClassIdentifier: 
-  position: {x: 317.60004, y: 191}
+  position: {x: 343, y: 235}
   guid: 8370fbaf9fb2c684a8a032cabc03ee26
+  size: {x: 0, y: 0}
   message: Sup
   type: 3
 --- !u!114 &-4890208960853658413
@@ -28,8 +29,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91594645077396347bff885c3eeef9ab, type: 3}
   m_Name: Sequencer Node
   m_EditorClassIdentifier: 
-  position: {x: 7.5999756, y: -67.600006}
+  position: {x: 33.56746, y: -25.454988}
   guid: b1ce52be94008d1428aa2f94d7ae99d2
+  size: {x: 0, y: 0}
   _children:
   - {fileID: 4488304297153306110}
   - {fileID: 8695670934014955798}
@@ -45,8 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cabe08d2e2ef82244927fc6096b2479d, type: 3}
   m_Name: Root Node
   m_EditorClassIdentifier: 
-  position: {x: 8, y: -201.304}
+  position: {x: 34, y: -161}
   guid: aee2434d7e0c3ff4ab416f4d9110b759
+  size: {x: 0, y: 0}
   _child: {fileID: -4890208960853658413}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -80,8 +83,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55ac1de7d8a7f69488ffa2d1c548cf49, type: 3}
   m_Name: Repeat Node
   m_EditorClassIdentifier: 
-  position: {x: 167, y: 64.20001}
+  position: {x: 193, y: 107}
   guid: e5ff3e199d6849f4bad996b9c8529ace
+  size: {x: 0, y: 0}
   _child: {fileID: -7400724846289622227}
   numberOfRepetitions: -1
 --- !u!114 &8695670934014955798
@@ -96,6 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ebeb7c21167d8d4f83a145820670bb9, type: 3}
   m_Name: Wait Node
   m_EditorClassIdentifier: 
-  position: {x: -108.599976, y: 64}
+  position: {x: -116.832535, y: 106.54499}
   guid: 3ab4f1eab85824445b32e385ac2c7ed1
+  size: {x: 0, y: 0}
   duration: 1

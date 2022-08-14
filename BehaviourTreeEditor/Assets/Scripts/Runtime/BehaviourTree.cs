@@ -57,15 +57,17 @@ namespace Gbt
             AssetDatabase.Refresh();
         }
 
-        public StickyNote CreateStickyNote()
+        public StickyNote CreateStickyNote(Vector2 position)
         {
-            StickyNote stickyNote = new StickyNote
+            StickyNote stickyNote = new StickyNote(position)
             {
                 title = "New Note",
                 contents = "Add comment here",
                 fontSize = StickyNoteFontSize.Small,
                 theme = StickyNoteTheme.Classic
             };
+            
+            stickyNotes.Add(stickyNote);
 
             return stickyNote;
         }

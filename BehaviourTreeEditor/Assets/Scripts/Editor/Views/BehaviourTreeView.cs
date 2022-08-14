@@ -125,6 +125,15 @@ namespace Gbt
             evt.menu.AppendAction("Reset View", action => ResetViewToFitAllContent(false));
         }
 
+        public void UpdateNodeStates()
+        {
+            nodes.ForEach(node =>
+            {
+                NodeView nodeView = node as NodeView;
+                nodeView.UpdateState();
+            });
+        }
+
         //From https://forum.unity.com/threads/graph-view-transform-that-fits-all-elements.1276886/
         private void ResetViewToFitAllContent(bool maintainCurrentViewScale)
         {

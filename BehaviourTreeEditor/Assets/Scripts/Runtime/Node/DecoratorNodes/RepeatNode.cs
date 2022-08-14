@@ -35,7 +35,7 @@ namespace Gbt
 
         protected override State OnUpdate()
         {
-            if (Child.NodeState == State.Failure)
+            if (Child.state == State.Failure)
             {
                 return State.Failure;
             }
@@ -46,7 +46,7 @@ namespace Gbt
                 return State.Running;
             }
 
-            if (Child.NodeState == State.Success)
+            if (Child.state == State.Success)
             {
                 _currentCycle++;
             }

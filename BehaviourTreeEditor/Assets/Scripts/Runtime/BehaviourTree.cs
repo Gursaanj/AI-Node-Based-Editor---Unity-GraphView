@@ -22,7 +22,7 @@ namespace Gbt
 
         public Node.State Update()
         {
-            if (rootNode.NodeState == Node.State.Running)
+            if (rootNode.state == Node.State.Running)
             {
                 treeState = rootNode.Update();
             }

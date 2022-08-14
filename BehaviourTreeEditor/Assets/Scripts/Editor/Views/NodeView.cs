@@ -11,6 +11,10 @@ namespace Gbt
         public Action<NodeView> OnNodeSelected;
         public Node node;
 
+        private const string RUNNING_CLASS_LIST = "running";
+        private const string FAILURE_CLASS_LIST = "failure";
+        private const string SUCCESS_CLASS_LIST = "success";
+
         private Port _inputPort;
         private Port _outputPort;
 
@@ -119,20 +123,32 @@ namespace Gbt
             }
         }
 
-        public void SortChildren()
+        public void UpdateState()
         {
-            CompositeNode compositeNode = node as CompositeNode;
-
-            if (compositeNode != null)
-            {
-                compositeNode.Children.Sort(SortByHorizontalPosition);
-            }
+            RemoveFromClassList(RUNNING_CLASS_LIST);
+            RemoveFromClassList(FAILURE_CLASS_LIST);
+            RemoveFromClassList(SUCCESS_CLASS_LIST);
             
-        }
+            if (!Application.isPlaying)
+            {
+                return;
+            }
 
-        private int SortByHorizontalPosition(Node left, Node right)
-        {
-            return left.position.x < right.position.x ? -1 : 1;
+            switch (node.state)
+            {
+                case Node.State.Running:
+                    if (node.hasStarted)
+                    {
+                        AddToClassList(RUNNING_CLASS_LIST);
+                    }
+                    break;
+                case Node.State.Failure:
+                    AddToClassList(FAILURE_CLASS_LIST);
+                    break;
+                case Node.State.Success:
+                    AddToClassList(SUCCESS_CLASS_LIST);
+                    break;
+            }
         }
     }
 }

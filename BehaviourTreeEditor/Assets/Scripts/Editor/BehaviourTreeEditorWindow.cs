@@ -1,4 +1,3 @@
-using System;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -69,13 +68,10 @@ namespace Gbt
             switch (change)
             {
                 case PlayModeStateChange.EnteredEditMode:
-                    OnSelectionChange();
-                    break;
-                case PlayModeStateChange.ExitingEditMode:
-                    break;
                 case PlayModeStateChange.EnteredPlayMode:
                     OnSelectionChange();
                     break;
+                case PlayModeStateChange.ExitingEditMode:
                 case PlayModeStateChange.ExitingPlayMode:
                     break;
             }
@@ -95,7 +91,7 @@ namespace Gbt
                 }
             }
 
-            if (tree != null)
+            if (tree != null && _treeView != null)
             {
                 if (Application.isPlaying)
                 {
@@ -116,5 +112,15 @@ namespace Gbt
         {
             _inspectorView.UpdateSelection(node);
         }
+
+        private void OnInspectorUpdate()
+        {
+            if (_treeView != null)
+            {
+                _treeView.UpdateNodeStates();
+            }
+        }
     }
+    
+    //Todo: Currently, my selection.activeGameObject needs to be on the TreeRunner when in edit mode, going into play mode, for the cloning to actually take place! Must change so cloning always take place
 }

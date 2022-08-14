@@ -102,3 +102,31 @@
     background-color: rgb(45, 30, 47);
     min-height: 20px;
 }
+
+#node-state {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-left-color: rgba(0, 0, 0, 255);
+    border-right-color: rgba(0, 0, 0, 255);
+    border-top-color: rgba(0, 0, 0, 255);
+    border-bottom-color: rgba(0, 0, 0, 255);
+}
+
+.running #node-state {
+    background-color: rgba(64, 183, 6, 0.73);
+}
+
+.success #node-state {
+    background-color: rgba(159, 129, 0, 0.66);
+}
+
+.failure #node-state {
+    background-color: rgba(144, 43, 43, 0.73);
+}

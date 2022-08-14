@@ -13,43 +13,42 @@ namespace Gbt
 
         public Vector2 position;
         [HideInInspector] public string guid;
+        [HideInInspector] public State state = State.Running;
+        [HideInInspector] public bool hasStarted = false;
         
         protected bool _hasValidConditions = true;
-        
-        private State _state = State.Running;
-        private bool _started = false;
 
         public abstract string InspectorName { get; protected set; }
         
-        public State NodeState => _state;
-        public bool Started => _started;
+        // public State NodeState => _state;
+        // public bool Started => _started;
 
         public State Update()
         {
-            if (!_started)
+            if (!hasStarted)
             {
                 OnStart();
-                _started = true;
+                hasStarted = true;
             }
 
             if (!_hasValidConditions)
             {
-                _state = State.Failure;
+                state = State.Failure;
                 OnStop();
-                _started = false;
+                hasStarted = false;
                 _hasValidConditions = true;
-                return _state;
+                return state;
             }
 
-            _state = OnUpdate();
+            state = OnUpdate();
 
-            if (_state == State.Failure || _state == State.Success)
+            if (state == State.Failure || state == State.Success)
             {
                 OnStop();
-                _started = false;
+                hasStarted = false;
             }
 
-            return _state;
+            return state;
         }
 
         public virtual Node Clone()

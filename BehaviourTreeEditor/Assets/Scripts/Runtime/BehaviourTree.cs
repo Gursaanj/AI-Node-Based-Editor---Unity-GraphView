@@ -30,10 +30,11 @@ namespace Gbt
         }
         
 #if UNITY_EDITOR
-        public Node CreateNode(System.Type type)
+        public Node CreateNode(System.Type type, Vector2 position)
         {
             Node node = (Node) ScriptableObject.CreateInstance(type);
             node.name = node.InspectorName;
+            node.position = position;
             node.guid = GUID.Generate().ToString();
             
             Undo.RecordObject(this, "Create Node");

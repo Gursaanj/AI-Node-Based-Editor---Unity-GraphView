@@ -48,7 +48,7 @@ namespace Gbt
 
             if (tree.rootNode == null)
             {
-                tree.rootNode = tree.CreateNode(typeof(RootNode)) as RootNode;
+                tree.rootNode = tree.CreateNode(typeof(RootNode), Vector2.zero) as RootNode;
                 EditorUtility.SetDirty(tree);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
@@ -105,17 +105,17 @@ namespace Gbt
 
             foreach (Type actionType in actionTypes)
             {
-                evt.menu.AppendAction($"{CREATE_NODE_CONTEXT_MENU_PREFIX}{actionType.BaseType.Name}/{actionType.Name}", action => CreateNode(actionType));
+                evt.menu.AppendAction($"{CREATE_NODE_CONTEXT_MENU_PREFIX}{actionType.BaseType.Name}/{actionType.Name}", action => CreateNode(actionType, graphPosition));
             }
 
             foreach (Type compositeType in compositeTypes)
             {
-                evt.menu.AppendAction($"{CREATE_NODE_CONTEXT_MENU_PREFIX}{compositeType.BaseType.Name}/{compositeType.Name}", action => CreateNode(compositeType));
+                evt.menu.AppendAction($"{CREATE_NODE_CONTEXT_MENU_PREFIX}{compositeType.BaseType.Name}/{compositeType.Name}", action => CreateNode(compositeType, graphPosition));
             }
 
             foreach (Type decoratorType in decoratorTypes)
             {
-                evt.menu.AppendAction($"{CREATE_NODE_CONTEXT_MENU_PREFIX}{decoratorType.BaseType.Name}/{decoratorType.Name}", action => CreateNode(decoratorType));
+                evt.menu.AppendAction($"{CREATE_NODE_CONTEXT_MENU_PREFIX}{decoratorType.BaseType.Name}/{decoratorType.Name}", action => CreateNode(decoratorType, graphPosition));
             }
             
             evt.menu.AppendSeparator();
@@ -183,9 +183,9 @@ namespace Gbt
             AddElement(note);
         }
 
-        private void CreateNode(System.Type type)
+        private void CreateNode(System.Type type, Vector2 position)
         {
-            Node node = _behaviourTree.CreateNode(type);
+            Node node = _behaviourTree.CreateNode(type, position);
             CreateNodeView(node);
         }
 

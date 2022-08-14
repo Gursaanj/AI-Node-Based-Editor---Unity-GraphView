@@ -18,6 +18,7 @@ namespace Gbt
 
         // based on GraphView.k_FrameBorder
         private const int FRAME_BORDER_WIDTH = 30;
+        private const string CREATE_NODE_CONTEXT_MENU_PREFIX = "Add Node/";
 
         public Action<NodeView> OnNodeSelected;
         private BehaviourTree _behaviourTree;
@@ -104,28 +105,24 @@ namespace Gbt
 
             foreach (Type actionType in actionTypes)
             {
-                evt.menu.AppendAction($"[{actionType.BaseType.Name}] {actionType.Name}", action => CreateNode(actionType));
+                evt.menu.AppendAction($"{CREATE_NODE_CONTEXT_MENU_PREFIX}{actionType.BaseType.Name}/{actionType.Name}", action => CreateNode(actionType));
             }
-            
-            evt.menu.AppendSeparator();
 
             foreach (Type compositeType in compositeTypes)
             {
-                evt.menu.AppendAction($"[{compositeType.BaseType.Name}] {compositeType.Name}", action => CreateNode(compositeType));
+                evt.menu.AppendAction($"{CREATE_NODE_CONTEXT_MENU_PREFIX}{compositeType.BaseType.Name}/{compositeType.Name}", action => CreateNode(compositeType));
             }
-            
-            evt.menu.AppendSeparator();
 
             foreach (Type decoratorType in decoratorTypes)
             {
-                evt.menu.AppendAction($"[{decoratorType.BaseType.Name}] {decoratorType.Name}", action => CreateNode(decoratorType));
+                evt.menu.AppendAction($"{CREATE_NODE_CONTEXT_MENU_PREFIX}{decoratorType.BaseType.Name}/{decoratorType.Name}", action => CreateNode(decoratorType));
             }
             
             evt.menu.AppendSeparator();
-            evt.menu.AppendAction("Reset View", action => ResetViewToFitAllContent(false));
+            evt.menu.AppendAction("Add StickyNote", action => CreateStickyNote(graphPosition));
             
             evt.menu.AppendSeparator();
-            evt.menu.AppendAction("Add StickyNote", action => CreateStickyNote(graphPosition));
+            evt.menu.AppendAction("Reset View", action => ResetViewToFitAllContent(false));
         }
 
         //From https://forum.unity.com/threads/graph-view-transform-that-fits-all-elements.1276886/

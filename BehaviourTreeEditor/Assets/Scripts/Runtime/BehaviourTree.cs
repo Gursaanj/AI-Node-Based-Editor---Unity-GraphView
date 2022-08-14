@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 #if UNITY_EDITOR
+using UnityEditor.Experimental.GraphView;
 using UnityEditor;
 #endif
 using UnityEngine;
@@ -13,6 +14,10 @@ namespace Gbt
         public Node.State treeState;
 
         public List<Node> nodes = new List<Node>();
+        
+#if UNITY_EDITOR
+        public List<StickyNote> stickyNotes = new List<StickyNote>();
+#endif
 
         public Node.State Update()
         {
@@ -23,6 +28,7 @@ namespace Gbt
 
             return treeState;
         }
+        
 #if UNITY_EDITOR
         public Node CreateNode(System.Type type)
         {
@@ -49,6 +55,24 @@ namespace Gbt
             Undo.DestroyObjectImmediate(node);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+        }
+
+        public StickyNote CreateStickyNote()
+        {
+            StickyNote stickyNote = new StickyNote
+            {
+                title = "New Note",
+                contents = "Add comment here",
+                fontSize = StickyNoteFontSize.Small,
+                theme = StickyNoteTheme.Classic
+            };
+
+            return stickyNote;
+        }
+
+        public void DeleteStickyNote(StickyNote note)
+        {
+            stickyNotes.Remove(note);
         }
 
         public void AddChild(Node parent, Node child)

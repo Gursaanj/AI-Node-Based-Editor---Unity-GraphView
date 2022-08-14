@@ -40,7 +40,7 @@ namespace Gbt
         public void PopulateView(BehaviourTree tree)
         {
             _behaviourTree = tree;
-
+            
             graphViewChanged -= OnGraphViewChanged;
             DeleteElements(graphElements);
             graphViewChanged += OnGraphViewChanged;
@@ -73,6 +73,12 @@ namespace Gbt
                     Edge edge = parentView.OutputPort.ConnectTo(childView.InputPort);
                     AddElement(edge);
                 }
+            }
+            
+            //Create Sticky Notes
+            foreach (StickyNote stickyNote in tree.stickyNotes)
+            {
+                CreateStickyNoteView(stickyNote);
             }
             
             EditorApplication.delayCall += () => ResetViewToFitAllContent(true);
@@ -110,7 +116,11 @@ namespace Gbt
                 evt.menu.AppendAction($"[{decoratorType.BaseType.Name}] {decoratorType.Name}", action => CreateNode(decoratorType));
             }
             
+            evt.menu.AppendSeparator();
             evt.menu.AppendAction("Reset View", action => ResetViewToFitAllContent(false));
+            
+            evt.menu.AppendSeparator();
+            evt.menu.AppendAction("Add StickyNote", action => CreateStickyNote());
         }
 
         //From https://forum.unity.com/threads/graph-view-transform-that-fits-all-elements.1276886/
@@ -139,6 +149,11 @@ namespace Gbt
                         NodeView childView = edge.input.node as NodeView;
                         _behaviourTree.RemoveChild(parentView.node, childView.node);
                     }
+
+                    if (element is StickyNote stickyNote)
+                    {
+                        _behaviourTree.DeleteStickyNote(stickyNote);
+                    }
                 }
             }
 
@@ -153,6 +168,17 @@ namespace Gbt
             }
 
             return graphViewChange;
+        }
+
+        private void CreateStickyNote()
+        {
+            StickyNote stickyNote = _behaviourTree.CreateStickyNote();
+            CreateStickyNoteView(stickyNote);
+        }
+
+        private void CreateStickyNoteView(StickyNote note)
+        {
+            AddElement(note);
         }
 
         private void CreateNode(System.Type type)

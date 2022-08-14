@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Gbt
@@ -11,10 +12,11 @@ namespace Gbt
             Success
         }
 
-        public Vector2 position;
+        [HideInInspector] public Vector2 position;
         [HideInInspector] public string guid;
         [HideInInspector] public State state = State.Running;
         [HideInInspector] public bool hasStarted = false;
+        [TextArea] public string description = String.Empty;
         
         protected bool _hasValidConditions = true;
 

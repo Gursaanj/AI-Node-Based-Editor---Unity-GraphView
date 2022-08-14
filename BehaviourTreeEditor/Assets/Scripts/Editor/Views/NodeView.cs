@@ -1,6 +1,7 @@
 using System;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -33,6 +34,11 @@ namespace Gbt
             CreateInputPorts();
             CreateOutputPorts();
             SetupClasses();
+            
+            //Data bind custom description to Node description
+            Label descriptionLabel = this.Q<Label>("description");
+            descriptionLabel.bindingPath = nameof(node.description);
+            descriptionLabel.Bind(new SerializedObject(node));
         }
 
         public override void SetPosition(Rect newPos)
@@ -117,10 +123,7 @@ namespace Gbt
         {
             base.OnSelected();
 
-            if (OnNodeSelected != null)
-            {
-                OnNodeSelected.Invoke(this);
-            }
+            OnNodeSelected?.Invoke(this);
         }
 
         public void UpdateState()

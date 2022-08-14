@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 343, y: 235}
   guid: 8370fbaf9fb2c684a8a032cabc03ee26
+  state: 0
+  hasStarted: 0
+  description: 
   message: Sup
   type: 3
 --- !u!114 &-4890208960853658413
@@ -30,6 +33,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 33.56746, y: -25.454988}
   guid: b1ce52be94008d1428aa2f94d7ae99d2
+  state: 0
+  hasStarted: 0
+  description: 
   _children:
   - {fileID: 4488304297153306110}
   - {fileID: 8695670934014955798}
@@ -47,6 +53,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 34, y: -161}
   guid: aee2434d7e0c3ff4ab416f4d9110b759
+  state: 0
+  hasStarted: 0
+  description: 
   _child: {fileID: -4890208960853658413}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -82,6 +91,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 193, y: 107}
   guid: e5ff3e199d6849f4bad996b9c8529ace
+  state: 0
+  hasStarted: 0
+  description: 
   _child: {fileID: -7400724846289622227}
   numberOfRepetitions: -1
 --- !u!114 &8695670934014955798
@@ -98,4 +110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: -116.832535, y: 106.54499}
   guid: 3ab4f1eab85824445b32e385ac2c7ed1
+  state: 0
+  hasStarted: 0
+  description: 
   duration: 1

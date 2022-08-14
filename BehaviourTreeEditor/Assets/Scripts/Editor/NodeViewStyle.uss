@@ -75,10 +75,14 @@
 #title {
     -unity-font-style: bold;
     font-size: 14px;
+    -unity-text-align: middle-center;
+    -unity-font: none;
 }
 
 #description {
     font-size: 10px;
+    white-space: normal;
+    max-width: 150px;
 }
 
 #divider {

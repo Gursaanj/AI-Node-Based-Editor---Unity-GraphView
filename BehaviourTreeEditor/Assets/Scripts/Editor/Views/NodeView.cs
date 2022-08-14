@@ -118,5 +118,21 @@ namespace Gbt
                 OnNodeSelected.Invoke(this);
             }
         }
+
+        public void SortChildren()
+        {
+            CompositeNode compositeNode = node as CompositeNode;
+
+            if (compositeNode != null)
+            {
+                compositeNode.Children.Sort(SortByHorizontalPosition);
+            }
+            
+        }
+
+        private int SortByHorizontalPosition(Node left, Node right)
+        {
+            return left.position.x < right.position.x ? -1 : 1;
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 #if UNITY_EDITOR
+using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor;
 #endif
@@ -39,9 +40,14 @@ namespace Gbt
             
             Undo.RecordObject(this, "Create Node");
             nodes.Add(node);
+
+            if (!Application.isPlaying)
+            {
+                AssetDatabase.AddObjectToAsset(node, this);
+            }
             
-            AssetDatabase.AddObjectToAsset(node, this);
             Undo.RegisterCreatedObjectUndo(node, "Create Node");
+            
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
@@ -159,13 +165,32 @@ namespace Gbt
 
             return children;
         }
+#endif
 
         public BehaviourTree Clone()
         {
             BehaviourTree tree = Instantiate(this);
             tree.rootNode = tree.rootNode.Clone();
+            tree.nodes = new List<Node>();
+            
+            Traverse(tree.rootNode, (node) =>
+            {
+                tree.nodes.Add(node);
+            });
+            
             return tree;
         }
-#endif  
+        
+        //Depth-First Traversal
+        private void Traverse(Node node, Action<Node> visiter)
+        {
+            if (node != null)
+            {
+                visiter?.Invoke(node);
+                var children = GetChildren(node);
+                children.ForEach((node) => Traverse(node, visiter));
+            }
+        }
+        
     }
 }

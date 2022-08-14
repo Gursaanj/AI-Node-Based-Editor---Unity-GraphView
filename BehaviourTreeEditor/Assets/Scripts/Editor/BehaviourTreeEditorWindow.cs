@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -52,14 +53,62 @@ namespace Gbt
             OnSelectionChange();
         }
 
+        private void OnEnable()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private void OnDisable()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+        }
+        
+        private void OnPlayModeStateChanged(PlayModeStateChange change)
+        {
+            switch (change)
+            {
+                case PlayModeStateChange.EnteredEditMode:
+                    OnSelectionChange();
+                    break;
+                case PlayModeStateChange.ExitingEditMode:
+                    break;
+                case PlayModeStateChange.EnteredPlayMode:
+                    OnSelectionChange();
+                    break;
+                case PlayModeStateChange.ExitingPlayMode:
+                    break;
+            }
+        }
+
         private void OnSelectionChange()
         {
             BehaviourTree tree = Selection.activeObject as BehaviourTree;
 
-            //Ensure that the asset is ready to be inspected before populating editor
-            if (tree != null && AssetDatabase.CanOpenAssetInEditor(tree.GetInstanceID()))
+            if (tree == null && Selection.activeGameObject != null)
             {
-                _treeView.PopulateView(tree);
+                BehaviourTreeRunner runner = Selection.activeGameObject.GetComponent<BehaviourTreeRunner>();
+
+                if (runner != null)
+                {
+                    tree = runner.Tree;
+                }
+            }
+
+            if (tree != null)
+            {
+                if (Application.isPlaying)
+                {
+                    _treeView.PopulateView(tree);
+                }
+                else
+                {
+                    //Ensure that the asset is ready to be inspected before populating editor
+                    if (AssetDatabase.CanOpenAssetInEditor(tree.GetInstanceID()))
+                    {
+                        _treeView.PopulateView(tree);
+                    }
+                }
             }
         }
 

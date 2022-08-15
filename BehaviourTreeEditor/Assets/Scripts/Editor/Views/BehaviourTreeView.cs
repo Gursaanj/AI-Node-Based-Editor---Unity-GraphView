@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -22,6 +23,7 @@ namespace Gbt
 
         public Action<NodeView> OnNodeSelected;
         private BehaviourTree _behaviourTree;
+        private Blackboard _blackboard;
         
         public BehaviourTreeView()
         {
@@ -34,6 +36,8 @@ namespace Gbt
 
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Editor/BehaviourTreeEditorWindow.uss");
             styleSheets.Add(styleSheet);
+
+            GenerateBlackboard();
 
             Undo.undoRedoPerformed += OnUndoRedoPerformed;
         }
@@ -83,6 +87,13 @@ namespace Gbt
             }
             
             EditorApplication.delayCall += () => ResetViewToFitAllContent(true);
+        }
+
+        public override bool supportsWindowedBlackboard => true;
+
+        public override Blackboard GetBlackboard()
+        {
+            return _blackboard;
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -209,6 +220,146 @@ namespace Gbt
         {
             return GetNodeByGuid(node.guid) as NodeView;
         }
+
+        #region Blackboard
+        
+        private enum FieldType
+        {
+            String,
+            Int,
+            Float,
+            Vector2,
+            Vector3,
+            Color
+        }
+
+        private const string FIELD_VALUE_LABEL = "Value:";
+
+        private void GenerateBlackboard()
+        {
+            BlackboardSection mainSection = new BlackboardSection
+            {
+                headerVisible = false,
+                canAcceptDrop = selected => true,
+            };
+            _blackboard = new Blackboard(this)
+            {
+                title = "Blackboard",
+                subTitle = "Global Elements",
+                windowed =  true,
+                scrollable = true,
+                addItemRequested = board =>
+                {
+                    GenericMenu menu = new GenericMenu();
+                    foreach (int value in Enum.GetValues(typeof(FieldType)))
+                    {
+                        menu.AddItem(new GUIContent(Enum.GetName(typeof(FieldType), value)), false, () => AddRequestedItem(mainSection, (FieldType) value));
+                    }
+                    menu.ShowAsContext();
+                    
+                },
+                editTextRequested = (board, element, newValue) =>
+                {
+                    BlackboardField field = (BlackboardField) element;
+                    field.text = newValue;
+                },
+                moveItemRequested = (board, index, element) =>
+                {
+                    // if (index <= 1 || element.userData == null)
+                    // {
+                    //     return;
+                    // }
+                    //
+                    // BlackboardField field = (BlackboardField) element;
+                    // VisualElement propertyView = (VisualElement) field.userData;
+                    //
+                    // VisualElement container = new VisualElement();
+                    // container.Add(field);
+                    // BlackboardRow row = new BlackboardRow(field, propertyView);
+                    // container.Add(row);
+                    //
+                    // mainSection.ElementAt(0).Remove(element.parent);
+                }
+            };
+            
+            _blackboard.Add(mainSection);
+        }
+
+        private void AddRequestedItem(BlackboardSection mainSection, FieldType fieldType)
+        {
+            VisualElement fieldContainer = new VisualElement();
+            BlackboardField field = GetBlackboardField(fieldType);
+            fieldContainer.Add(field);
+            
+            VisualElement propertyView = GetPropertyField(fieldType);
+            field.userData = propertyView;
+            
+            BlackboardRow row = new BlackboardRow(field, propertyView);
+            fieldContainer.Add(row);
+            mainSection.Add(fieldContainer);
+        }
+
+        private BlackboardField GetBlackboardField(FieldType fieldType)
+        {
+            switch (fieldType)
+            {
+                case FieldType.String:
+                    return new BlackboardField(null, "String Field", "string");
+                case FieldType.Int:
+                    return new BlackboardField(null, "Integer Field", "int");
+                case FieldType.Float:
+                    return new BlackboardField(null, "Float Field", "float");
+                case FieldType.Vector2:
+                    return new BlackboardField(null, "Vector2 Field", "Vector2");
+                case FieldType.Vector3:
+                    return new BlackboardField(null, "Vector3 Field", "Vector3");
+                case FieldType.Color:
+                    return new BlackboardField(null, "Color Field", "Color");
+                default:
+                    return null;
+            }
+        }
+
+        private VisualElement GetPropertyField(FieldType fieldType)
+        {
+            switch (fieldType)
+            {
+                case FieldType.String:
+                    return new TextField(FIELD_VALUE_LABEL)
+                    {
+                        value = String.Empty
+                    };
+                case FieldType.Int:
+                    return new IntegerField(FIELD_VALUE_LABEL)
+                    {
+                        value = 0
+                    };
+                case FieldType.Float:
+                    return new FloatField(FIELD_VALUE_LABEL)
+                    {
+                        value = 0.0f
+                    };;
+                case FieldType.Vector2:
+                    return new Vector2Field(FIELD_VALUE_LABEL)
+                    {
+                        value = Vector2.zero
+                    };
+                case FieldType.Vector3:
+                    return new Vector3Field(FIELD_VALUE_LABEL)
+                    {
+                        value = Vector3.zero
+                    };
+                case FieldType.Color:
+                    return new ColorField(FIELD_VALUE_LABEL)
+                    {
+                        value = Color.black
+                    };
+                default:
+                    return null;
+            }
+        }
+
+        #endregion
 
         private void OnUndoRedoPerformed()
         {

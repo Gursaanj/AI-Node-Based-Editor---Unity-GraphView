@@ -1,14 +1,17 @@
 using UnityEditor;
 using UnityEditor.Callbacks;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Gbt
 {
-    public class BehaviourTreeEditorWindow : EditorWindow
+    public class BehaviourTreeEditorWindow : GraphViewEditorWindow
     {
         private BehaviourTreeView _treeView;
         private InspectorView _inspectorView;
+
+        private GraphViewBlackboardWindow _blackboardWindow;
         
         
         [MenuItem("Gbt/BehaviourTreeEditor/Editor")]
@@ -48,6 +51,10 @@ namespace Gbt
             _treeView = root.Q<BehaviourTreeView>();
             _inspectorView = root.Q<InspectorView>();
             _treeView.OnNodeSelected = OnNodeSelectionChanged;
+
+            _blackboardWindow = CreateInstance<GraphViewBlackboardWindow>();
+            _blackboardWindow.SelectGraphViewFromWindow(this, _treeView);
+            _blackboardWindow.Show();
             
             OnSelectionChange();
         }

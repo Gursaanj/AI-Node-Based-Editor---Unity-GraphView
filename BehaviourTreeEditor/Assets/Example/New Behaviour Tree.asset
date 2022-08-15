@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cabe08d2e2ef82244927fc6096b2479d, type: 3}
   m_Name: Root Node
   m_EditorClassIdentifier: 
-  position: {x: 34, y: -161}
+  position: {x: 32.799988, y: -160.2}
   guid: aee2434d7e0c3ff4ab416f4d9110b759
   state: 0
   hasStarted: 0

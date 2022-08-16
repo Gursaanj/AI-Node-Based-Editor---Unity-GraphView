@@ -235,9 +235,12 @@ namespace Gbt
 
         private const string FIELD_VALUE_LABEL = "Value:";
 
+        private BlackboardSection _mainSection;
+        private Dictionary<BlackboardField, VisualElement> _fieldContainerMap = new Dictionary<BlackboardField, VisualElement>();
+
         private void GenerateBlackboard()
         {
-            BlackboardSection mainSection = new BlackboardSection
+            _mainSection = new BlackboardSection
             {
                 headerVisible = false,
                 canAcceptDrop = selected => true,
@@ -253,10 +256,9 @@ namespace Gbt
                     GenericMenu menu = new GenericMenu();
                     foreach (int value in Enum.GetValues(typeof(FieldType)))
                     {
-                        menu.AddItem(new GUIContent(Enum.GetName(typeof(FieldType), value)), false, () => AddRequestedItem(mainSection, (FieldType) value));
+                        menu.AddItem(new GUIContent(Enum.GetName(typeof(FieldType), value)), false, () => AddRequestedItem((FieldType) value));
                     }
                     menu.ShowAsContext();
-                    
                 },
                 editTextRequested = (board, element, newValue) =>
                 {
@@ -265,27 +267,37 @@ namespace Gbt
                 },
                 moveItemRequested = (board, index, element) =>
                 {
-                    // if (index <= 1 || element.userData == null)
-                    // {
-                    //     return;
-                    // }
-                    //
-                    // BlackboardField field = (BlackboardField) element;
-                    // VisualElement propertyView = (VisualElement) field.userData;
-                    //
-                    // VisualElement container = new VisualElement();
-                    // container.Add(field);
-                    // BlackboardRow row = new BlackboardRow(field, propertyView);
-                    // container.Add(row);
-                    //
-                    // mainSection.ElementAt(0).Remove(element.parent);
+                    if (element.userData == null || index < 0)
+                    {
+                        return;
+                    }
+
+                    BlackboardField field = (BlackboardField) element;
+                    if (!_fieldContainerMap.ContainsKey(field))
+                    {
+                        return;
+                    }
+
+                    VisualElement fieldContainer = _fieldContainerMap[field];
+                    int prevIndex = _mainSection.IndexOf(fieldContainer);
+
+                    if (index == prevIndex)
+                    {
+                        return;
+                    }
+
+                    int placementIndex = prevIndex < index ? index - 1 : index;
+                    
+                    _mainSection.Remove(_fieldContainerMap[field]);
+                    
+                    _mainSection.Insert(placementIndex, fieldContainer);
                 }
             };
             
-            _blackboard.Add(mainSection);
+            _blackboard.Add(_mainSection);
         }
 
-        private void AddRequestedItem(BlackboardSection mainSection, FieldType fieldType)
+        private void AddRequestedItem(FieldType fieldType)
         {
             VisualElement fieldContainer = new VisualElement();
             BlackboardField field = GetBlackboardField(fieldType);
@@ -296,7 +308,8 @@ namespace Gbt
             
             BlackboardRow row = new BlackboardRow(field, propertyView);
             fieldContainer.Add(row);
-            mainSection.Add(fieldContainer);
+            _mainSection.Add(fieldContainer);
+            _fieldContainerMap.Add(field, fieldContainer);
         }
 
         private BlackboardField GetBlackboardField(FieldType fieldType)

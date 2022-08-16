@@ -223,7 +223,7 @@ namespace Gbt
 
         #region Blackboard
         
-        private enum FieldType
+        private enum BlackboardFieldType
         {
             String,
             Int,
@@ -238,6 +238,43 @@ namespace Gbt
         private BlackboardSection _mainSection;
         private Dictionary<BlackboardField, VisualElement> _fieldContainerMap = new Dictionary<BlackboardField, VisualElement>();
 
+        public static object GetBlackboardFieldData(BlackboardField field)
+        {
+            string typeText = field.typeText;
+            if (string.IsNullOrEmpty(typeText))
+            {
+                Debug.LogError("Invalid BlackboardField, unable to retrieve data");
+                return null;
+            }
+
+            BlackboardFieldType fieldType = Enum.Parse<BlackboardFieldType>(typeText, true);
+
+            switch (fieldType)
+            {
+                case BlackboardFieldType.String:
+                    TextField textField = (TextField) field.userData;
+                    return textField.value;
+                case BlackboardFieldType.Int:
+                    IntegerField integerField = (IntegerField) field.userData;
+                    return integerField.value;
+                case BlackboardFieldType.Float:
+                    FloatField floatField = (FloatField) field.userData;
+                    return floatField.value;
+                case BlackboardFieldType.Vector2:
+                    Vector2Field vector2Field = (Vector2Field) field.userData;
+                    return vector2Field.value;
+                case BlackboardFieldType.Vector3:
+                    Vector3Field vector3Field = (Vector3Field) field.userData;
+                    return vector3Field.value;
+                case BlackboardFieldType.Color:
+                    ColorField colorField = (ColorField) field.userData;
+                    return colorField.value;
+                default:
+                    Debug.LogError("Unable to parse BlackboardField data type, unable to retrieve data");
+                    return null;
+            }
+        }
+        
         private void GenerateBlackboard()
         {
             _mainSection = new BlackboardSection
@@ -255,9 +292,9 @@ namespace Gbt
                 addItemRequested = board =>
                 {
                     GenericMenu menu = new GenericMenu();
-                    foreach (int value in Enum.GetValues(typeof(FieldType)))
+                    foreach (int value in Enum.GetValues(typeof(BlackboardFieldType)))
                     {
-                        menu.AddItem(new GUIContent(Enum.GetName(typeof(FieldType), value)), false, () => AddRequestedItem((FieldType) value));
+                        menu.AddItem(new GUIContent(Enum.GetName(typeof(BlackboardFieldType), value)), false, () => AddRequestedItem((BlackboardFieldType) value));
                     }
                     menu.ShowAsContext();
                 },
@@ -300,13 +337,13 @@ namespace Gbt
             _blackboard.Add(_mainSection);
         }
 
-        private void AddRequestedItem(FieldType fieldType)
+        private void AddRequestedItem(BlackboardFieldType blackboardFieldType)
         {
             VisualElement fieldContainer = new VisualElement();
-            BlackboardField field = GetBlackboardField(fieldType);
+            BlackboardField field = GetBlackboardField(blackboardFieldType);
             fieldContainer.Add(field);
             
-            VisualElement propertyView = GetPropertyField(fieldType);
+            VisualElement propertyView = GetPropertyField(blackboardFieldType);
             field.userData = propertyView;
             
             BlackboardRow row = new BlackboardRow(field, propertyView);
@@ -341,57 +378,57 @@ namespace Gbt
             _fieldContainerMap = updatedFieldContainerMap;
         }
 
-        private BlackboardField GetBlackboardField(FieldType fieldType)
+        private BlackboardField GetBlackboardField(BlackboardFieldType blackboardFieldType)
         {
-            switch (fieldType)
+            switch (blackboardFieldType)
             {
-                case FieldType.String:
+                case BlackboardFieldType.String:
                     return new BlackboardField(null, "String Field", "string");
-                case FieldType.Int:
+                case BlackboardFieldType.Int:
                     return new BlackboardField(null, "Integer Field", "int");
-                case FieldType.Float:
+                case BlackboardFieldType.Float:
                     return new BlackboardField(null, "Float Field", "float");
-                case FieldType.Vector2:
+                case BlackboardFieldType.Vector2:
                     return new BlackboardField(null, "Vector2 Field", "Vector2");
-                case FieldType.Vector3:
+                case BlackboardFieldType.Vector3:
                     return new BlackboardField(null, "Vector3 Field", "Vector3");
-                case FieldType.Color:
+                case BlackboardFieldType.Color:
                     return new BlackboardField(null, "Color Field", "Color");
                 default:
                     return null;
             }
         }
 
-        private VisualElement GetPropertyField(FieldType fieldType)
+        private VisualElement GetPropertyField(BlackboardFieldType blackboardFieldType)
         {
-            switch (fieldType)
+            switch (blackboardFieldType)
             {
-                case FieldType.String:
+                case BlackboardFieldType.String:
                     return new TextField(FIELD_VALUE_LABEL)
                     {
                         value = String.Empty
                     };
-                case FieldType.Int:
+                case BlackboardFieldType.Int:
                     return new IntegerField(FIELD_VALUE_LABEL)
                     {
                         value = 0
                     };
-                case FieldType.Float:
+                case BlackboardFieldType.Float:
                     return new FloatField(FIELD_VALUE_LABEL)
                     {
                         value = 0.0f
                     };;
-                case FieldType.Vector2:
+                case BlackboardFieldType.Vector2:
                     return new Vector2Field(FIELD_VALUE_LABEL)
                     {
                         value = Vector2.zero
                     };
-                case FieldType.Vector3:
+                case BlackboardFieldType.Vector3:
                     return new Vector3Field(FIELD_VALUE_LABEL)
                     {
                         value = Vector3.zero
                     };
-                case FieldType.Color:
+                case BlackboardFieldType.Color:
                     return new ColorField(FIELD_VALUE_LABEL)
                     {
                         value = Color.black

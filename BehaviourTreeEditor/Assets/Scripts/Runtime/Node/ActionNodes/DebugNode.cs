@@ -11,7 +11,18 @@ namespace Gbt
         public LogType type= LogType.Log;
         
         public override string InspectorName { get; protected set; } = "Debug Node";
-        
+
+        public override void InjectData(object data)
+        {
+            if (data is string givenMessage)
+            {
+#if UNITY_EDITOR
+                UnityEditor.Undo.RecordObject(this, "Change Debug Message");
+#endif
+                message = givenMessage;
+            }
+        }
+
         protected override void OnStart()
         {
             LogMessage("OnStart");

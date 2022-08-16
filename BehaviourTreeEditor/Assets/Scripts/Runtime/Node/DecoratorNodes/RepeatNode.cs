@@ -14,7 +14,25 @@ namespace Gbt
         private int _currentCycle;
         
         public override string InspectorName { get; protected set; } = "Repeat Node";
-        
+
+        public override void InjectData(object data)
+        {
+            if (data is int givenRepetitions)
+            {
+                if (givenRepetitions < -1)
+                {
+                    Debug.LogError("Invalid amount of repetitions");
+                }
+                else
+                {
+#if UNITY_EDITOR
+                    UnityEditor.Undo.RecordObject(this, "Change repetitions");
+#endif
+                    numberOfRepetitions = givenRepetitions;
+                }
+            }
+        }
+
         protected override void OnStart()
         {
             if (numberOfRepetitions < -1)

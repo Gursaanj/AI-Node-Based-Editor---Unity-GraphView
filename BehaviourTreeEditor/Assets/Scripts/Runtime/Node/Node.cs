@@ -21,9 +21,6 @@ namespace Gbt
         protected bool _hasValidConditions = true;
 
         public abstract string InspectorName { get; protected set; }
-        
-        // public State NodeState => _state;
-        // public bool Started => _started;
 
         public State Update()
         {
@@ -57,6 +54,19 @@ namespace Gbt
         {
             return Instantiate(this);
         }
+        
+        #region DragAndDropDataInjection
+
+        public virtual void InjectData(object data)
+        {
+            if (data == null)
+            {
+                Debug.LogError("null Data");
+                return;
+            }
+        }
+        
+        #endregion
 
         protected abstract void OnStart();
         protected abstract void OnStop();

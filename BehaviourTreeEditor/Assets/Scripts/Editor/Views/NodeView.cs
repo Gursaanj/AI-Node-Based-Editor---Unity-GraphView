@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -15,6 +17,8 @@ namespace Gbt
         private const string RUNNING_CLASS_LIST = "running";
         private const string FAILURE_CLASS_LIST = "failure";
         private const string SUCCESS_CLASS_LIST = "success";
+        
+        private const string DRAG_SELECTION_TYPE = "DragSelection";
 
         private Port _inputPort;
         private Port _outputPort;
@@ -30,6 +34,9 @@ namespace Gbt
 
             style.left = node.position.x;
             style.top = node.position.y;
+            
+            RegisterCallback<DragUpdatedEvent>(OnDragUpdated, TrickleDown.NoTrickleDown);
+            RegisterCallback<DragPerformEvent>(OnDragPerformed, TrickleDown.NoTrickleDown);
             
             CreateInputPorts();
             CreateOutputPorts();
@@ -47,6 +54,41 @@ namespace Gbt
             Undo.RecordObject(node, "Set Node Position");
             node.position = new Vector2(newPos.xMin, newPos.yMin);
             EditorUtility.SetDirty(node); //Manually forces recording to persist through events like assembly reloads
+        }
+        
+        public override void OnSelected()
+        {
+            base.OnSelected();
+
+            OnNodeSelected?.Invoke(this);
+        }
+
+        public void UpdateState()
+        {
+            RemoveFromClassList(RUNNING_CLASS_LIST);
+            RemoveFromClassList(FAILURE_CLASS_LIST);
+            RemoveFromClassList(SUCCESS_CLASS_LIST);
+            
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+
+            switch (node.state)
+            {
+                case Node.State.Running:
+                    if (node.hasStarted)
+                    {
+                        AddToClassList(RUNNING_CLASS_LIST);
+                    }
+                    break;
+                case Node.State.Failure:
+                    AddToClassList(FAILURE_CLASS_LIST);
+                    break;
+                case Node.State.Success:
+                    AddToClassList(SUCCESS_CLASS_LIST);
+                    break;
+            }
         }
 
         private void CreateInputPorts()
@@ -119,38 +161,23 @@ namespace Gbt
             }
         }
 
-        public override void OnSelected()
+        private void OnDragUpdated(DragUpdatedEvent evt)
         {
-            base.OnSelected();
-
-            OnNodeSelected?.Invoke(this);
+            if (DragAndDrop.GetGenericData(DRAG_SELECTION_TYPE) is List<ISelectable> selection &&
+                (selection.OfType<BlackboardField>().Count() >= 1))
+            {
+                DragAndDrop.visualMode = evt.actionKey ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Move;
+            }
         }
 
-        public void UpdateState()
+        private void OnDragPerformed(DragPerformEvent evt)
         {
-            RemoveFromClassList(RUNNING_CLASS_LIST);
-            RemoveFromClassList(FAILURE_CLASS_LIST);
-            RemoveFromClassList(SUCCESS_CLASS_LIST);
-            
-            if (!Application.isPlaying)
-            {
-                return;
-            }
+            List<ISelectable> selection = DragAndDrop.GetGenericData(DRAG_SELECTION_TYPE) as List<ISelectable>;
+            IEnumerable<BlackboardField> fields = selection.OfType<BlackboardField>();
 
-            switch (node.state)
+            foreach (BlackboardField field in fields)
             {
-                case Node.State.Running:
-                    if (node.hasStarted)
-                    {
-                        AddToClassList(RUNNING_CLASS_LIST);
-                    }
-                    break;
-                case Node.State.Failure:
-                    AddToClassList(FAILURE_CLASS_LIST);
-                    break;
-                case Node.State.Success:
-                    AddToClassList(SUCCESS_CLASS_LIST);
-                    break;
+                node.InjectData(BehaviourTreeView.GetBlackboardFieldData(field));
             }
         }
     }

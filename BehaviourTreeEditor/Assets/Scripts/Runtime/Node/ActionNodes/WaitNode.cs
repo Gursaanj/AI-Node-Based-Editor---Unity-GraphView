@@ -13,7 +13,25 @@ namespace Gbt
         private float _startTime;
         
         public override string InspectorName { get; protected set; } = "Wait Node";
-        
+
+        public override void InjectData(object data)
+        {
+            if (data is float givenDuration)
+            {
+                if (givenDuration < 0.0f)
+                {
+                    Debug.LogError("Unable to set duration to negative amount of time");
+                }
+                else
+                {
+#if UNITY_EDITOR
+                    UnityEditor.Undo.RecordObject(this, "Change duration");
+#endif
+                    duration = givenDuration;
+                }
+            }
+        }
+
         protected override void OnStart()
         {
             if (duration < 0.0f)

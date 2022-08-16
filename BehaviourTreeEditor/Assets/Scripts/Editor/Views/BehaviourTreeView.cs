@@ -245,6 +245,7 @@ namespace Gbt
                 headerVisible = false,
                 canAcceptDrop = selected => true,
             };
+
             _blackboard = new Blackboard(this)
             {
                 title = "Blackboard",
@@ -294,6 +295,8 @@ namespace Gbt
                 }
             };
             
+            _blackboard.RegisterCallback<KeyDownEvent>(OnKeyDownEvent, TrickleDown.NoTrickleDown);
+            
             _blackboard.Add(_mainSection);
         }
 
@@ -310,6 +313,32 @@ namespace Gbt
             fieldContainer.Add(row);
             _mainSection.Add(fieldContainer);
             _fieldContainerMap.Add(field, fieldContainer);
+        }
+
+        private void OnKeyDownEvent(KeyDownEvent evt)
+        {
+            if (evt.keyCode != KeyCode.Delete || evt.target != _blackboard)
+            {
+                return;
+            }
+            
+            //Todo: use overlap to detect which BlackboardField is actually being hit instead of iterating over for loop
+            Dictionary<BlackboardField, VisualElement> updatedFieldContainerMap = new Dictionary<BlackboardField, VisualElement>();
+            foreach (var fieldPair in _fieldContainerMap)
+            {
+                BlackboardField field = fieldPair.Key;
+                VisualElement container = fieldPair.Value;
+                if (!field.selected)
+                {
+                    updatedFieldContainerMap.Add(field, container);
+                }
+                else
+                {
+                    _mainSection.Remove(container);
+                }
+            }
+
+            _fieldContainerMap = updatedFieldContainerMap;
         }
 
         private BlackboardField GetBlackboardField(FieldType fieldType)

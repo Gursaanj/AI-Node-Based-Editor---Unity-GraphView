@@ -105,14 +105,14 @@ namespace Gbt
         
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
-            TypeCache.TypeCollection actionTypes = TypeCache.GetTypesDerivedFrom<ActionNode>();
-            TypeCache.TypeCollection compositeTypes = TypeCache.GetTypesDerivedFrom<CompositeNode>();
-            TypeCache.TypeCollection decoratorTypes = TypeCache.GetTypesDerivedFrom<DecoratorNode>();
-            
             //Convert screenSpace to local transform space - With Dragger and Zoomer Manipulators
             //https://answers.unity.com/questions/1825041/how-to-get-the-correct-contextual-menu-mouse-posit.html
             Vector2 localMousePosition = evt.localMousePosition;
             Vector2 graphPosition = viewTransform.matrix.inverse.MultiplyPoint(localMousePosition);
+            
+            TypeCache.TypeCollection actionTypes = TypeCache.GetTypesDerivedFrom<ActionNode>();
+            TypeCache.TypeCollection compositeTypes = TypeCache.GetTypesDerivedFrom<CompositeNode>();
+            TypeCache.TypeCollection decoratorTypes = TypeCache.GetTypesDerivedFrom<DecoratorNode>();
 
             foreach (Type actionType in actionTypes)
             {

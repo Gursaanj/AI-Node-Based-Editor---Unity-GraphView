@@ -10,8 +10,11 @@ namespace Gbt
     {
         private BehaviourTreeView _treeView;
         private InspectorView _inspectorView;
+        private Label _treeViewTitle;
 
         private GraphViewBlackboardWindow _blackboardWindow;
+
+        private static string _treeName = string.Empty;
         
         
         [MenuItem("Gbt/BehaviourTreeEditor/Editor")]
@@ -29,7 +32,8 @@ namespace Gbt
             {
                 return false;
             }
-            
+
+            _treeName = Selection.activeObject.name;
             OpenWindow();
             return true;
         }
@@ -48,6 +52,10 @@ namespace Gbt
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Editor/BehaviourTreeEditorWindow.uss");
             root.styleSheets.Add(styleSheet);
 
+            //Set Tree's title
+            _treeViewTitle = rootVisualElement.Q<Label>("Node-View-Label");
+            SetTreeName(_treeName);
+            
             _treeView = root.Q<BehaviourTreeView>();
             _inspectorView = root.Q<InspectorView>();
             _treeView.OnNodeSelected = OnNodeSelectionChanged;
@@ -55,7 +63,7 @@ namespace Gbt
             _blackboardWindow = CreateInstance<GraphViewBlackboardWindow>();
             _blackboardWindow.SelectGraphViewFromWindow(this, _treeView);
             _blackboardWindow.Show();
-            
+
             OnSelectionChange();
         }
 
@@ -88,14 +96,22 @@ namespace Gbt
         {
             BehaviourTree tree = Selection.activeObject as BehaviourTree;
 
-            if (tree == null && Selection.activeGameObject != null)
+            if (tree == null)
             {
-                BehaviourTreeRunner runner = Selection.activeGameObject.GetComponent<BehaviourTreeRunner>();
-
-                if (runner != null)
+                if (Selection.activeGameObject != null)
                 {
-                    tree = runner.Tree;
+                    BehaviourTreeRunner runner = Selection.activeGameObject.GetComponent<BehaviourTreeRunner>();
+
+                    if (runner != null)
+                    {
+                        tree = runner.Tree;
+                        SetTreeName(tree.name);
+                    }
                 }
+            }
+            else
+            {
+                SetTreeName(tree.name);
             }
 
             if (tree != null && _treeView != null)
@@ -126,6 +142,11 @@ namespace Gbt
             {
                 _treeView.UpdateNodeStates();
             }
+        }
+
+        private void SetTreeName(string treeName)
+        {
+            _treeViewTitle.text = treeName;
         }
     }
     

@@ -25,9 +25,6 @@ namespace Gbt
                 }
                 else
                 {
-#if UNITY_EDITOR
-                    UnityEditor.Undo.RecordObject(this, "Change repetitions");
-#endif
                     numberOfRepetitions = givenRepetitions;
                 }
             }

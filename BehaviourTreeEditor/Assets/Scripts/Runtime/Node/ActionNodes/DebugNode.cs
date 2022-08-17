@@ -16,9 +16,6 @@ namespace Gbt
         {
             if (data is string givenMessage)
             {
-#if UNITY_EDITOR
-                UnityEditor.Undo.RecordObject(this, "Change Debug Message");
-#endif
                 message = givenMessage;
             }
         }

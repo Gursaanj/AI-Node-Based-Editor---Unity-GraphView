@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d2bc4515772c64c8974f0a5f4016cc, type: 3}
   m_Name: Debug Node
   m_EditorClassIdentifier: 
-  position: {x: 343, y: 235}
+  position: {x: 343.20007, y: 233.40002}
   guid: 8370fbaf9fb2c684a8a032cabc03ee26
   state: 0
   hasStarted: 0

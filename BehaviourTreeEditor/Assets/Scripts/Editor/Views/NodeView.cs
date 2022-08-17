@@ -41,6 +41,12 @@ namespace Gbt
             CreateInputPorts();
             CreateOutputPorts();
             SetupClasses();
+
+            //Ensure root node is not deletable
+            if (node is RootNode)
+            {
+                capabilities -= Capabilities.Deletable;
+            }
             
             //Data bind custom description to Node description
             Label descriptionLabel = this.Q<Label>("description");
@@ -174,7 +180,8 @@ namespace Gbt
         {
             List<ISelectable> selection = DragAndDrop.GetGenericData(DRAG_SELECTION_TYPE) as List<ISelectable>;
             IEnumerable<BlackboardField> fields = selection.OfType<BlackboardField>();
-
+            
+            Undo.RecordObject(node, "Inject Blackboard Data");
             foreach (BlackboardField field in fields)
             {
                 node.InjectData(BehaviourTreeView.GetBlackboardFieldData(field));

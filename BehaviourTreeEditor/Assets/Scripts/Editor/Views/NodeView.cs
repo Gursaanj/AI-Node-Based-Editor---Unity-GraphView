@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -41,6 +42,8 @@ namespace Gbt
             CreateInputPorts();
             CreateOutputPorts();
             SetupClasses();
+
+            generateVisualContent = OnVisualContentGenerated;
 
             //Ensure root node is not deletable
             if (node is RootNode)
@@ -95,6 +98,12 @@ namespace Gbt
                     AddToClassList(SUCCESS_CLASS_LIST);
                     break;
             }
+        }
+
+        private void OnVisualContentGenerated(MeshGenerationContext ctx)
+        {
+            VisualElement element = ctx.visualElement.contentContainer.Q("input");
+            elementTypeColor = element.resolvedStyle.backgroundColor;
         }
 
         private void CreateInputPorts()

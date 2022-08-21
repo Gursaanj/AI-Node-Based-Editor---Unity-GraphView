@@ -24,6 +24,7 @@ namespace Gbt
         public Action<NodeView> OnNodeSelected;
         private BehaviourTree _behaviourTree;
         private Blackboard _blackboard;
+        private MiniMap _miniMap;
         
         public BehaviourTreeView()
         {
@@ -38,6 +39,7 @@ namespace Gbt
             styleSheets.Add(styleSheet);
 
             GenerateBlackboard();
+            GenerateMiniMap();
 
             Undo.undoRedoPerformed += OnUndoRedoPerformed;
         }
@@ -200,6 +202,7 @@ namespace Gbt
 
         private void CreateStickyNoteView(StickyNote note)
         {
+            note.elementTypeColor = Color.yellow;
             AddElement(note);
         }
 
@@ -440,6 +443,22 @@ namespace Gbt
 
         #endregion
 
+        #region MiniMap
+
+        private void GenerateMiniMap()
+        {
+            _miniMap = new MiniMap()
+            {
+                anchored = true,
+                graphView = this,
+                windowed = true,
+            };
+            
+            _miniMap.style.backgroundColor = new StyleColor(new Color32(0,0,0,255));
+        }
+
+        #endregion
+        
         private void OnUndoRedoPerformed()
         {
             PopulateView(_behaviourTree);

@@ -13,8 +13,10 @@ namespace Gbt
         private InspectorView _inspectorView;
         private Label _treeViewTitle;
         private ToolbarToggle _blackBoardToggle;
+        private ToolbarToggle _miniMapToggle;
 
         private BlackboardToolWindow _blackboardWindow;
+        private MiniMapToolWindow _miniMapWindow;
 
         private static string _treeName = string.Empty;
         
@@ -64,6 +66,9 @@ namespace Gbt
 
             _blackBoardToggle = rootVisualElement.Q<ToolbarToggle>("Blackboard-Toggle");
             _blackBoardToggle.RegisterValueChangedCallback(OnBlackboardTogglePressed);
+
+            _miniMapToggle = rootVisualElement.Q<ToolbarToggle>("MiniMap-Toggle");
+            _miniMapToggle.RegisterValueChangedCallback(OnMiniMapTogglePressed);
             
             OnSelectionChange();
         }
@@ -88,6 +93,32 @@ namespace Gbt
             if (_blackBoardToggle.value)
             {
                 _blackBoardToggle.value = false;
+            }
+        }
+
+        private void OnMiniMapTogglePressed(ChangeEvent<bool> toggleChangeEvent)
+        {
+            if (toggleChangeEvent.newValue)
+            {
+                _miniMapWindow = CreateInstance<MiniMapToolWindow>();
+                _miniMapWindow.SelectGraphViewFromWindow(this, _treeView);
+                _miniMapWindow.OnWindowClose = OnMiniMapToolWindowIndependentlyClosed;
+                _miniMapWindow.Show();
+            }
+            else
+            {
+                if (_miniMapWindow != null)
+                {
+                    _miniMapWindow.Close();
+                }
+            }
+        }
+
+        private void OnMiniMapToolWindowIndependentlyClosed()
+        {
+            if (_miniMapToggle.value)
+            {
+                _miniMapToggle.value = false;
             }
         }
 

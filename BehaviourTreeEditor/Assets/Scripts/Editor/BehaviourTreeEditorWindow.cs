@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.Experimental.GraphView;
@@ -79,20 +80,12 @@ namespace Gbt
             {
                 _blackboardWindow = CreateInstance<BlackboardToolWindow>();
                 _blackboardWindow.SelectGraphViewFromWindow(this, _treeView);
-                _blackboardWindow.OnWindowClose = OnBlackboardToolWindowIndependentlyClosed;
+                _blackboardWindow.OnWindowClose = OnGraphViewToolWindowIndependentlyClosed<BlackboardToolWindow>;
                 _blackboardWindow.Show();
             }
             else
             {
                 _blackboardWindow.Close();
-            }
-        }
-
-        private void OnBlackboardToolWindowIndependentlyClosed()
-        {
-            if (_blackBoardToggle.value)
-            {
-                _blackBoardToggle.value = false;
             }
         }
 
@@ -102,7 +95,7 @@ namespace Gbt
             {
                 _miniMapWindow = CreateInstance<MiniMapToolWindow>();
                 _miniMapWindow.SelectGraphViewFromWindow(this, _treeView);
-                _miniMapWindow.OnWindowClose = OnMiniMapToolWindowIndependentlyClosed;
+                _miniMapWindow.OnWindowClose = OnGraphViewToolWindowIndependentlyClosed<MiniMapToolWindow>;
                 _miniMapWindow.Show();
             }
             else
@@ -114,11 +107,23 @@ namespace Gbt
             }
         }
 
-        private void OnMiniMapToolWindowIndependentlyClosed()
+        private void OnGraphViewToolWindowIndependentlyClosed<T>() where T : GraphViewToolWindow
         {
-            if (_miniMapToggle.value)
+            ToolbarToggle toggle = new ToolbarToggle();
+            Type toolWindowType = typeof(T);
+
+            if (toolWindowType == typeof(BlackboardToolWindow))
             {
-                _miniMapToggle.value = false;
+                toggle = _blackBoardToggle;
+            }
+            else if (toolWindowType == typeof(MiniMapToolWindow))
+            {
+                toggle = _miniMapToggle;
+            }
+
+            if (toggle.value)
+            {
+                toggle.value = false;
             }
         }
 

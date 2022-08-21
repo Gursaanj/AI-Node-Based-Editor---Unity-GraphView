@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,8 +12,9 @@ namespace Gbt
         private BehaviourTreeView _treeView;
         private InspectorView _inspectorView;
         private Label _treeViewTitle;
+        private ToolbarToggle _blackBoardToggle;
 
-        private GraphViewBlackboardWindow _blackboardWindow;
+        private BlackboardToolWindow _blackboardWindow;
 
         private static string _treeName = string.Empty;
         
@@ -60,11 +62,33 @@ namespace Gbt
             _inspectorView = root.Q<InspectorView>();
             _treeView.OnNodeSelected = OnNodeSelectionChanged;
 
-            _blackboardWindow = CreateInstance<GraphViewBlackboardWindow>();
-            _blackboardWindow.SelectGraphViewFromWindow(this, _treeView);
-            _blackboardWindow.Show();
-
+            _blackBoardToggle = rootVisualElement.Q<ToolbarToggle>("Blackboard-Toggle");
+            _blackBoardToggle.RegisterValueChangedCallback(OnBlackboardTogglePressed);
+            
             OnSelectionChange();
+        }
+
+        private void OnBlackboardTogglePressed(ChangeEvent<bool> toggleChangeEvent)
+        {
+            if (toggleChangeEvent.newValue)
+            {
+                _blackboardWindow = CreateInstance<BlackboardToolWindow>();
+                _blackboardWindow.SelectGraphViewFromWindow(this, _treeView);
+                _blackboardWindow.OnWindowClose = OnBlackboardToolWindowIndependentlyClosed;
+                _blackboardWindow.Show();
+            }
+            else
+            {
+                _blackboardWindow.Close();
+            }
+        }
+
+        private void OnBlackboardToolWindowIndependentlyClosed()
+        {
+            if (_blackBoardToggle.value)
+            {
+                _blackBoardToggle.value = false;
+            }
         }
 
         private void OnEnable()

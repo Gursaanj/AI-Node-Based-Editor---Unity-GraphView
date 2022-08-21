@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/Scripts/Editor/BehaviourTreeEditorWindow.uss?fileID=7433441132597879392&amp;guid=35035526d360c5344a1f0e758685618c&amp;type=3#BehaviourTreeEditorWindow" />
     <uie:Toolbar>
-        <uie:ToolbarMenu display-tooltip-when-elided="true" text="Assets" />
+        <uie:ToolbarToggle focusable="false" label="Blackboard" tooltip="Open Blackboard Window" name="Blackboard-Toggle" style="-unity-text-align: middle-center; width: auto; -unity-font-style: bold-and-italic; font-size: 15px; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; letter-spacing: 0;" />
     </uie:Toolbar>
     <Gbt.SplitView fixed-pane-initial-dimension="300">
         <ui:VisualElement name="left-panel">

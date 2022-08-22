@@ -22,6 +22,8 @@ namespace Gbt
         private const string CREATE_NODE_CONTEXT_MENU_PREFIX = "Add Node/";
 
         public Action<NodeView> OnNodeSelected;
+        public Action<StickyNote> OnStickyNoteSelected;
+        
         private BehaviourTree _behaviourTree;
         private Blackboard _blackboard;
         private MiniMap _miniMap;
@@ -248,6 +250,7 @@ namespace Gbt
         private void CreateStickyNote(Vector2 position)
         {
             StickyNote stickyNote = _behaviourTree.CreateStickyNote(position);
+            stickyNote.RegisterCallback<ClickEvent>(OnStickyNoteClicked, TrickleDown.TrickleDown);
             CreateStickyNoteView(stickyNote);
         }
 
@@ -255,6 +258,16 @@ namespace Gbt
         {
             note.elementTypeColor = Color.yellow;
             AddElement(note);
+        }
+
+        private void OnStickyNoteClicked(ClickEvent evt)
+        {
+            StickyNote note = evt.currentTarget as StickyNote;
+
+            if (note != null)
+            {
+                OnStickyNoteSelected?.Invoke(note);
+            }
         }
 
         private void CreateNode(System.Type type, Vector2 position)

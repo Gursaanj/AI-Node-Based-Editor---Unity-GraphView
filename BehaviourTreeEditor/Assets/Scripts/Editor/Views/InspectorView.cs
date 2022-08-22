@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -19,11 +20,27 @@ namespace Gbt
             
         }
 
-        public void UpdateSelection(NodeView nodeView)
+        public void UpdateSelection(GraphElement element)
         {
             Clear();
             UnityEngine.Object.DestroyImmediate(_editor);
 
+            IMGUIContainer container = new IMGUIContainer();
+            switch (element)
+            {
+                case NodeView nodeView :
+                    container = CreateContainer(nodeView);
+                    break;
+                case StickyNote stickyNote:
+                    container = CreateContainer(stickyNote);
+                    break;
+            }
+
+            Add(container);
+        }
+
+        private IMGUIContainer CreateContainer(NodeView nodeView)
+        {
             _editor = Editor.CreateEditor(nodeView.node);
             IMGUIContainer container = new IMGUIContainer(() =>
             {
@@ -32,14 +49,12 @@ namespace Gbt
                     _editor.OnInspectorGUI();
                 }
             });
-            Add(container);
+
+            return container;
         }
 
-        public void UpdateSelection(StickyNote note)
+        private IMGUIContainer CreateContainer(StickyNote note)
         {
-            Clear();
-            UnityEngine.Object.DestroyImmediate(_editor);
-            
             IMGUIContainer container = new IMGUIContainer(() =>
             {
                 if (note == null)
@@ -53,8 +68,9 @@ namespace Gbt
                 note.contents = GUILayout.TextArea(note.contents, EditorStyles.textArea,
                     GUILayout.Height(EditorGUIUtility.singleLineHeight * 3));
                 note.theme = (StickyNoteTheme) EditorGUILayout.EnumPopup("Theme", note.theme);
+                note.fontSize = (StickyNoteFontSize) EditorGUILayout.EnumPopup("Font Size", note.fontSize);
             });
-            Add(container);
+            return container;
         }
     }
 }

@@ -63,8 +63,8 @@ namespace Gbt
             
             _treeView = root.Q<BehaviourTreeView>();
             _inspectorView = root.Q<InspectorView>();
-            _treeView.OnNodeSelected = OnNodeSelectionChanged;
-            _treeView.OnStickyNoteSelected = OnStickyNoteSelectionChanged;
+            _treeView.OnNodeSelected = OnGraphElementSelectionChanged;
+            _treeView.OnStickyNoteSelected = OnGraphElementSelectionChanged;
 
             _blackBoardToggle = rootVisualElement.Q<ToolbarToggle>("Blackboard-Toggle");
             _blackBoardToggle.RegisterValueChangedCallback(OnBlackboardTogglePressed);
@@ -192,14 +192,9 @@ namespace Gbt
             }
         }
 
-        private void OnNodeSelectionChanged(NodeView node)
+        private void OnGraphElementSelectionChanged(GraphElement element)
         {
-            _inspectorView.UpdateSelection(node);
-        }
-
-        private void OnStickyNoteSelectionChanged(StickyNote note)
-        {
-            _inspectorView.UpdateSelection(note);
+            _inspectorView.UpdateSelection(element);
         }
 
         private void OnInspectorUpdate()

@@ -208,6 +208,19 @@ namespace Gbt
         {
             _treeViewTitle.text = treeName;
         }
+
+        private void OnDestroy()
+        {
+            if (_blackboardWindow != null)
+            {
+                _blackboardWindow.Close();
+            }
+
+            if (_miniMapWindow != null)
+            {
+                _miniMapWindow.Close();
+            }
+        }
     }
     
     //Todo: Currently, my selection.activeGameObject needs to be on the TreeRunner when in edit mode, going into play mode, for the cloning to actually take place! Must change so cloning always take place

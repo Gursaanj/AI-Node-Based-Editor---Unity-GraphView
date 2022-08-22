@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-#if UNITY_EDITOR
 using System;
+#if UNITY_EDITOR
 using UnityEditor.Experimental.GraphView;
 using UnityEditor;
 #endif

@@ -104,9 +104,24 @@ namespace Gbt
                 endPort.direction != startPort.direction &&
                 endPort.node != startPort.node).ToList();
         }
-        
+
+        #region ContextMenu
+
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
+            IEventHandler target = evt.target;
+            
+            if (target is NodeView)
+            {
+                BuildNodeViewContextMenu(evt.target as NodeView, evt);
+                return;
+            }
+
+            if (target is StickyNote)
+            {
+                return;
+            }
+            
             //Convert screenSpace to local transform space - With Dragger and Zoomer Manipulators
             //https://answers.unity.com/questions/1825041/how-to-get-the-correct-contextual-menu-mouse-posit.html
             Vector2 localMousePosition = evt.localMousePosition;
@@ -115,17 +130,17 @@ namespace Gbt
             TypeCache.TypeCollection actionTypes = TypeCache.GetTypesDerivedFrom<ActionNode>();
             TypeCache.TypeCollection compositeTypes = TypeCache.GetTypesDerivedFrom<CompositeNode>();
             TypeCache.TypeCollection decoratorTypes = TypeCache.GetTypesDerivedFrom<DecoratorNode>();
-
+            
             foreach (Type actionType in actionTypes)
             {
                 evt.menu.AppendAction($"{CREATE_NODE_CONTEXT_MENU_PREFIX}{actionType.BaseType.Name}/{actionType.Name}", action => CreateNode(actionType, graphPosition));
             }
-
+            
             foreach (Type compositeType in compositeTypes)
             {
                 evt.menu.AppendAction($"{CREATE_NODE_CONTEXT_MENU_PREFIX}{compositeType.BaseType.Name}/{compositeType.Name}", action => CreateNode(compositeType, graphPosition));
             }
-
+            
             foreach (Type decoratorType in decoratorTypes)
             {
                 evt.menu.AppendAction($"{CREATE_NODE_CONTEXT_MENU_PREFIX}{decoratorType.BaseType.Name}/{decoratorType.Name}", action => CreateNode(decoratorType, graphPosition));
@@ -137,6 +152,42 @@ namespace Gbt
             evt.menu.AppendSeparator();
             evt.menu.AppendAction("Reset View", action => ResetViewToFitAllContent(false));
         }
+        
+        private void BuildNodeViewContextMenu(NodeView nodeView, ContextualMenuPopulateEvent evt)
+        {
+            TypeCache.TypeCollection actionTypes = TypeCache.GetTypesDerivedFrom<ActionNode>();
+            TypeCache.TypeCollection compositeTypes = TypeCache.GetTypesDerivedFrom<CompositeNode>();
+            TypeCache.TypeCollection decoratorTypes = TypeCache.GetTypesDerivedFrom<DecoratorNode>();
+            
+            switch (nodeView.node)
+            {
+                case ActionNode _:
+                case DecoratorNode _ when nodeView.OutputPort.connected:
+                    return;
+                case DecoratorNode _:
+                case SequencerNode _:
+                {
+                    foreach (Type actionType in actionTypes)
+                    {
+                        evt.menu.AppendAction($"{CREATE_NODE_CONTEXT_MENU_PREFIX}{actionType.BaseType.Name}/{actionType.Name}", action => CreateNode(actionType, nodeView));
+                    }
+
+                    foreach (Type compositeType in compositeTypes)
+                    {
+                        evt.menu.AppendAction($"{CREATE_NODE_CONTEXT_MENU_PREFIX}{compositeType.BaseType.Name}/{compositeType.Name}", action => CreateNode(compositeType, nodeView));
+                    }
+
+                    foreach (Type decoratorType in decoratorTypes)
+                    {
+                        evt.menu.AppendAction($"{CREATE_NODE_CONTEXT_MENU_PREFIX}{decoratorType.BaseType.Name}/{decoratorType.Name}", action => CreateNode(decoratorType, nodeView));
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        #endregion
 
         public void UpdateNodeStates()
         {
@@ -212,11 +263,27 @@ namespace Gbt
             CreateNodeView(node);
         }
 
-        private void CreateNodeView(Node node)
+        private void CreateNode(System.Type type, NodeView parentNode)
+        {
+            const int yOffset = 10;
+            Vector2 newPosition = parentNode.node.position;
+            newPosition.y += parentNode.contentRect.height + yOffset;
+
+            Node node = _behaviourTree.CreateNode(type, newPosition);
+            NodeView childNode = CreateNodeView(node);
+
+            Edge edge = parentNode.OutputPort.ConnectTo(childNode.InputPort);
+            AddElement(edge);
+
+            _behaviourTree.AddChild(parentNode.node, node);
+        }
+
+        private NodeView CreateNodeView(Node node)
         {
             NodeView nodeView = new NodeView(node);
             nodeView.OnNodeSelected = OnNodeSelected;
             AddElement(nodeView);
+            return nodeView;
         }
 
         private NodeView FindNodeView(Node node)

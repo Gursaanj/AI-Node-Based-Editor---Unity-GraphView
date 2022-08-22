@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -45,10 +44,11 @@ namespace Gbt
 
             generateVisualContent = OnVisualContentGenerated;
 
-            //Ensure root node is not deletable
+            //Ensure root node is not deletable or copyable
             if (node is RootNode)
             {
                 capabilities -= Capabilities.Deletable;
+                capabilities -= Capabilities.Copiable;
             }
             
             //Data bind custom description to Node description

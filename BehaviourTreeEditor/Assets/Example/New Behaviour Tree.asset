@@ -12,14 +12,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91594645077396347bff885c3eeef9ab, type: 3}
   m_Name: Sequencer Node
   m_EditorClassIdentifier: 
-  position: {x: 428, y: 270.8}
+  position: {x: 414, y: 454}
   guid: c5391a978820ea645971868776deeea7
   state: 0
   hasStarted: 0
   description: 
   _children:
-  - {fileID: -5285567161461615102}
   - {fileID: 2609015559437086058}
+  - {fileID: -5285567161461615102}
+--- !u!114 &-6626704155915392901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91594645077396347bff885c3eeef9ab, type: 3}
+  m_Name: Sequencer Node
+  m_EditorClassIdentifier: 
+  position: {x: 414, y: 234}
+  guid: 34232aac0ddf45840a0e612ea60bca3a
+  state: 0
+  hasStarted: 0
+  description: 
+  _children:
+  - {fileID: 4063831658558048680}
 --- !u!114 &-5285567161461615102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32,13 +51,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d2bc4515772c64c8974f0a5f4016cc, type: 3}
   m_Name: Debug Node
   m_EditorClassIdentifier: 
-  position: {x: 237.59998, y: 401.19995}
+  position: {x: 256, y: 667}
   guid: bd3dc67343587484da01589a9ff9cad6
   state: 0
   hasStarted: 0
   description: 
   message: Message A
   type: 3
+--- !u!114 &-4168317986600387108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ebeb7c21167d8d4f83a145820670bb9, type: 3}
+  m_Name: Wait Node
+  m_EditorClassIdentifier: 
+  position: {x: 414, y: 326}
+  guid: 28b6957164c7eec48933e300fe74b9fa
+  state: 0
+  hasStarted: 0
+  description: 
+  duration: 1
 --- !u!114 &-390637162048327868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,6 +116,9 @@ MonoBehaviour:
   - {fileID: -7101802931924032803}
   - {fileID: -5285567161461615102}
   - {fileID: 2609015559437086058}
+  - {fileID: -6626704155915392901}
+  - {fileID: 4063831658558048680}
+  - {fileID: -4168317986600387108}
 --- !u!114 &1817755456083428042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,7 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ebeb7c21167d8d4f83a145820670bb9, type: 3}
   m_Name: Wait Node
   m_EditorClassIdentifier: 
-  position: {x: 45.400024, y: 141.79999}
+  position: {x: 93, y: 142}
   guid: 82a7c5028473e0046994feb003bc8511
   state: 0
   hasStarted: 0
@@ -109,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d2bc4515772c64c8974f0a5f4016cc, type: 3}
   m_Name: Debug Node
   m_EditorClassIdentifier: 
-  position: {x: 618.4, y: 401.60004}
+  position: {x: 542, y: 667}
   guid: e72b35e16d6cd7d42936cba33b80900f
   state: 0
   hasStarted: 0
@@ -128,13 +168,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91594645077396347bff885c3eeef9ab, type: 3}
   m_Name: Sequencer Node
   m_EditorClassIdentifier: 
-  position: {x: 263.59998, y: 13.200012}
+  position: {x: 264, y: 15}
   guid: 42deb9df271a0d44d9c298cd44dd1b1e
   state: 0
   hasStarted: 0
   description: 
   _children:
   - {fileID: 1817755456083428042}
+  - {fileID: 3072044065443885292}
   - {fileID: 3072044065443885292}
 --- !u!114 &3072044065443885292
 MonoBehaviour:
@@ -148,10 +189,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55ac1de7d8a7f69488ffa2d1c548cf49, type: 3}
   m_Name: Repeat Node
   m_EditorClassIdentifier: 
-  position: {x: 428, y: 141.59999}
+  position: {x: 414, y: 142}
   guid: 729c2fd0a58ee524abcd53eb7fdf682b
   state: 0
   hasStarted: 0
   description: 
-  _child: {fileID: -7101802931924032803}
+  _child: {fileID: -6626704155915392901}
   numberOfRepetitions: -1
+--- !u!114 &4063831658558048680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6d2bc4515772c64c8974f0a5f4016cc, type: 3}
+  m_Name: Debug Node
+  m_EditorClassIdentifier: 
+  position: {x: 264, y: 337}
+  guid: 2d94b32dd0c59da4d9f4be718aec224f
+  state: 0
+  hasStarted: 0
+  description: 
+  message: 
+  type: 3

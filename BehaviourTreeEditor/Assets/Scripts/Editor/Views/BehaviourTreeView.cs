@@ -123,6 +123,16 @@ namespace Gbt
             {
                 return;
             }
+
+            if (target is Group)
+            {
+                Group group = target as Group;
+                evt.menu.AppendAction("Remove Group", action =>
+                {
+                    RemoveElement(group);
+                });
+                return;
+            }
             
             //Convert screenSpace to local transform space - With Dragger and Zoomer Manipulators
             //https://answers.unity.com/questions/1825041/how-to-get-the-correct-contextual-menu-mouse-posit.html
@@ -151,8 +161,16 @@ namespace Gbt
             evt.menu.AppendSeparator();
             evt.menu.AppendAction("Add StickyNote", action => CreateStickyNote(graphPosition));
             
-            evt.menu.AppendSeparator();
+            
             evt.menu.AppendAction("Reset View", action => ResetViewToFitAllContent(false));
+
+            IEnumerable<NodeView> selectedNodes = selection.OfType<NodeView>();
+            if (selectedNodes.Count() > 1)
+            {
+                evt.menu.AppendSeparator();
+                evt.menu.AppendAction("Create Group", action => CreateGroup(selectedNodes, graphPosition));
+            }
+            
         }
         
         private void BuildNodeViewContextMenu(NodeView nodeView, ContextualMenuPopulateEvent evt)
@@ -297,6 +315,22 @@ namespace Gbt
             nodeView.OnNodeSelected = OnNodeSelected;
             AddElement(nodeView);
             return nodeView;
+        }
+
+        private void CreateGroup(IEnumerable<GraphElement> elements, Vector2 position)
+        {
+            Group group = new Group
+            {
+                title = "New Group",
+                tooltip = "Drag a node while holding Shift to detach it from the group"
+            };
+            
+            //Registers group to have menu actions when context clicks
+            group.AddManipulator(new ContextualMenuManipulator(null));
+            
+            group.SetPosition(new Rect(position, Vector2.zero));
+            group.AddElements(elements);
+            Add(group);
         }
 
         private NodeView FindNodeView(Node node)

@@ -1,5 +1,24 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7426898338780074223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6d2bc4515772c64c8974f0a5f4016cc, type: 3}
+  m_Name: Debug Node
+  m_EditorClassIdentifier: 
+  position: {x: 864.80005, y: 45.4}
+  guid: 9bc8ae4c89fed184f92bf77aed8944f8
+  state: 0
+  hasStarted: 0
+  description: 
+  message: 
+  type: 3
 --- !u!114 &-6626704155915392901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19,6 +38,26 @@ MonoBehaviour:
   description: 
   _children:
   - {fileID: 4063831658558048680}
+--- !u!114 &-4658915893763713714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91594645077396347bff885c3eeef9ab, type: 3}
+  m_Name: Sequencer Node
+  m_EditorClassIdentifier: 
+  position: {x: 1028, y: -43.399998}
+  guid: 3da842f91db463b4bbe544e4eab244d3
+  state: 0
+  hasStarted: 0
+  description: 
+  _children:
+  - {fileID: 3473980469108986148}
+  - {fileID: -7426898338780074223}
 --- !u!114 &-4168317986600387108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,6 +116,9 @@ MonoBehaviour:
   - {fileID: -6626704155915392901}
   - {fileID: 4063831658558048680}
   - {fileID: -4168317986600387108}
+  - {fileID: -4658915893763713714}
+  - {fileID: 3473980469108986148}
+  - {fileID: -7426898338780074223}
 --- !u!114 &1817755456083428042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91594645077396347bff885c3eeef9ab, type: 3}
   m_Name: Sequencer Node
   m_EditorClassIdentifier: 
-  position: {x: 264, y: 15}
+  position: {x: 264, y: 14.399994}
   guid: 42deb9df271a0d44d9c298cd44dd1b1e
   state: 0
   hasStarted: 0
@@ -135,6 +177,25 @@ MonoBehaviour:
   description: 
   _child: {fileID: -6626704155915392901}
   numberOfRepetitions: -1
+--- !u!114 &3473980469108986148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6d2bc4515772c64c8974f0a5f4016cc, type: 3}
+  m_Name: Debug Node
+  m_EditorClassIdentifier: 
+  position: {x: 1177.6, y: 45.4}
+  guid: b0d389384d3538a4686f8b3ed3e1db7a
+  state: 0
+  hasStarted: 0
+  description: 
+  message: 
+  type: 3
 --- !u!114 &4063831658558048680
 MonoBehaviour:
   m_ObjectHideFlags: 0

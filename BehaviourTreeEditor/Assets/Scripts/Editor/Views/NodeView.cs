@@ -44,11 +44,12 @@ namespace Gbt
 
             generateVisualContent = OnVisualContentGenerated;
 
-            //Ensure root node is not deletable or copyable
+            //Ensure root node is not deletable, copiable or groupable
             if (node is RootNode)
             {
                 capabilities -= Capabilities.Deletable;
                 capabilities -= Capabilities.Copiable;
+                capabilities -= Capabilities.Groupable;
             }
             
             //Data bind custom description to Node description

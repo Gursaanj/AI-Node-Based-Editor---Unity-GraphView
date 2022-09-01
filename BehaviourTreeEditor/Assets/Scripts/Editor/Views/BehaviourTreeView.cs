@@ -185,7 +185,7 @@ namespace Gbt
                 case DecoratorNode _ when nodeView.OutputPort.connected:
                     return;
                 case DecoratorNode _:
-                case SequencerNode _:
+                case CompositeNode _:
                 {
                     foreach (Type actionType in actionTypes)
                     {
@@ -322,7 +322,8 @@ namespace Gbt
             Group group = new Group
             {
                 title = "New Group",
-                tooltip = "Drag a node while holding Shift to detach it from the group"
+                tooltip = "Drag a node while holding Shift to detach it from the group",
+                autoUpdateGeometry = true
             };
             
             //Registers group to have menu actions when context clicks
